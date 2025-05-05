@@ -1,0 +1,38 @@
+@startuml Diagrama de Caso de Uso
+
+left to right direction
+
+rectangle SAGE {
+    (Realizar Login) as UC1
+    (Gerenciar Usuário) as UC2
+    (Gerenciar Despesas) as UC3
+    (Gerenciar Categoria) as UC4
+    (Notificar Despesas) as UC5
+    (Visualizar resumo das Despesas) as UC6
+    (Definir meta mensal) as UC7
+    (Buscar Despesas) as UC8
+    (Exportar resumo mensal) as UC9
+}
+
+:Usuario: 
+:Sistema:
+
+Usuario -- UC2
+Usuario -- UC3
+Usuario -- UC4
+Usuario -- UC6
+Usuario -- UC7
+Usuario -- UC8
+Usuario -- UC9
+
+UC2 ..> UC1: <<include>>
+UC3 ..> UC1: <<include>>
+UC4 ..> UC1: <<include>>
+UC6 ..> UC1: <<include>>
+UC7 ..> UC1: <<include>>
+UC8 ..> UC1: <<include>>
+UC9 ..> UC1: <<include>>
+
+Sistema -- UC5
+
+@enduml
