@@ -1,0 +1,69 @@
+@startuml Diagrama de classes
+
+skinparam ClassAttributeFontSize 12
+skinparam ClassFontSize 14
+skinparam ClassBorderColor black
+skinparam ArrowColor black
+skinparam ArrowFontSize 14
+skinparam ClassBackgroundColor #E6DE6A
+
+
+class Usuario {
+  -String id
+  -String nome
+  -String email
+  -String numero_de_telefone
+  -Date data_de_aniversario
+  -String senha
+  -String renda_fixa
+  -String renda_extra
+  -Double meta_mensal
+  +Bool login(String email, String senha)
+  +Usuario criar(String nome, String email, String numero_de_telefone, Date data_de_aniversario, String senha, String renda_fixa, String renda_extra, Double meta_mensal)
+  +Usuario recuperar(String id)
+  +Usuario atualizar(String id, String nome, String email, String numero_de_telefone, String senha, String renda_fixa, String renda_extra, Double meta_mensal)
+  +void excluir(String id)
+  +void adicionar_meta_mensal(Double meta_mensal)
+  +Double get_meta_mensal()
+}
+
+class Despesa {
+  -String id
+  -String nome
+  -Double valor
+  -String descricao
+  -Date data
+  -DespesaStatus status
+  -Bool fixa
+  +Despesa criar(String nome, Double valor, String descricao, Date data, DespesaStatus status, Bool fixa)
+  +Despesa recuperar(String id)
+  +Despesa atualizar(String id, String nome, Double valor, String descricao, Date data, DespesaStatus status, Bool fixa)
+  +void excluir(String id)
+  +List<Despesa> listar()
+  +view_expense_summary(Date start_date, Date end_date)
+  +search_expense(String nome, String category_nome)
+  +export_expenses(Date start_date, Date end_date)
+}
+
+class Categoria {
+  -String id
+  -String nome
+  -String descricao
+  +Categoria criar(String title, String descricao)
+  +Categoria recuperar(String id)
+  +Categoria atualizar(String id, String title, String descricao)
+  +void excluir(String id)
+  +List<Categoria> listar()
+}
+
+enum DespesaStatus {
+  PAID
+  PAY
+}
+
+Usuario"1" -down- "0..*"Despesa
+Usuario"1" -right- "0..*"Categoria
+Despesa"0.." -up- "0.."Categoria
+Despesa -left- DespesaStatus
+
+@enduml

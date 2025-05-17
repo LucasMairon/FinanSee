@@ -1,38 +1,59 @@
-@startuml Diagrama de Caso de Uso
+@startuml "diagrama_caso_de_uso"
 
 left to right direction
 
-rectangle SAGE {
-    (Realizar Login) as UC1
-    (Gerenciar Usuário) as UC2
-    (Gerenciar Despesas) as UC3
-    (Gerenciar Categoria) as UC4
-    (Notificar Despesas) as UC5
-    (Visualizar resumo das Despesas) as UC6
-    (Definir meta mensal) as UC7
-    (Buscar Despesas) as UC8
-    (Exportar resumo mensal) as UC9
+skinparam ActorBorderColor black
+skinparam ActorBackgroundColor white
+skinparam UsecaseBackgroundColor white
+skinparam UsecaseBorderColor black
+skinparam ArrowColor black
+
+
+rectangle "Sistema de Gestão Pessoal Financeira (SGPF)" {
+    (Gerenciar Usuário) as gerenciar_usuario
+    (Cadastrar Usuário) as cadastrar_usuario
+    (Gerenciar Despesas) as gerenciar_despesas
+    (Gerenciar Categoria) as gerenciar_categoria
+    (Notificar Despesas) as notificar_depesas
+    (Visualizar Resumo das Despesas) as visualizar_resumo_despesas
+    (Definir Meta Mensal) as definir_meta
+    (Buscar Despesas) as buscar_despesas
+    (Exportar Resumo Mensal) as exportar_resumo_mensal
+    (Realizar Login) as realizar_login
+    (Validar Informações) as validar_informacoes
 }
 
-:Usuario: 
-:Sistema:
+' Atores
+:Usuario: as usuario 
+:Sistema: as sistema
 
-Usuario -- UC2
-Usuario -- UC3
-Usuario -- UC4
-Usuario -- UC6
-Usuario -- UC7
-Usuario -- UC8
-Usuario -- UC9
+' Casos de uso relacionados ao sistema
+sistema -- validar_informacoes
+sistema -- notificar_depesas
 
-UC2 ..> UC1: <<include>>
-UC3 ..> UC1: <<include>>
-UC4 ..> UC1: <<include>>
-UC6 ..> UC1: <<include>>
-UC7 ..> UC1: <<include>>
-UC8 ..> UC1: <<include>>
-UC9 ..> UC1: <<include>>
+' Casos de uso relacionados ao usuario
+usuario -- realizar_login
+usuario -- gerenciar_usuario
+usuario -up- cadastrar_usuario
 
-Sistema -- UC5
+gerenciar_usuario ..> realizar_login: <<include>>
+
+' Casos de uso relacionados as despesas
+usuario -- gerenciar_despesas
+usuario -- visualizar_resumo_despesas
+usuario -- definir_meta
+usuario -- buscar_despesas
+usuario -- exportar_resumo_mensal
+
+gerenciar_despesas ..> realizar_login: <<include>>
+visualizar_resumo_despesas ..> realizar_login: <<include>>
+definir_meta ..> realizar_login: <<include>>
+buscar_despesas ..> realizar_login: <<include>>
+exportar_resumo_mensal ..> realizar_login <<include>>
+
+' Casos de uso relacionados as categorias
+usuario -- gerenciar_categoria
+
+gerenciar_categoria ..> realizar_login: <<include>>
 
 @enduml
