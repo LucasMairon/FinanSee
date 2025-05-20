@@ -4,66 +4,70 @@ skinparam ClassAttributeFontSize 12
 skinparam ClassFontSize 14
 skinparam ClassBorderColor black
 skinparam ArrowColor black
-skinparam ArrowFontSize 14
-skinparam ClassBackgroundColor #E6DE6A
+skinparam ArrowFontSize 8
+skinparam ClassBackgroundColor #F5F1A1
 
 
 class Usuario {
-  -String id
-  -String nome
-  -String email
-  -String numero_de_telefone
-  -Date data_de_aniversario
-  -String senha
-  -String renda_fixa
-  -String renda_extra
-  -Double meta_mensal
-  +Bool login(String email, String senha)
-  +Usuario criar(String nome, String email, String numero_de_telefone, Date data_de_aniversario, String senha, String renda_fixa, String renda_extra, Double meta_mensal)
-  +Usuario recuperar(String id)
-  +Usuario atualizar(String id, String nome, String email, String numero_de_telefone, String senha, String renda_fixa, String renda_extra, Double meta_mensal)
-  +void excluir(String id)
-  +void adicionar_meta_mensal(Double meta_mensal)
-  +Double get_meta_mensal()
+ -id: String
+ -nome: String
+ -email: String
+ -numero_de_telefone: String
+ -data_de_aniversario: Date
+ -senha: String
+ -renda_fixa: Double
+ -renda_extra: Double
+ -meta_mensal: Double
+ +login(email: String, senha: String): Bool
+ +criar(nome: String, email: String, numero_de_telefone: String, data_de_aniversario: Date, 
+  senha: String, renda_fixsa: Double, renda_extra: Double, meta_mensal: Double): Usuario
+ +recuperar(id: String): Usuario
+ +atualizar(id: String, nome: String, email: String, numero_de_telefone: String,
+ senha: String, renda_fixa: Double, renda_extra: Double, meta_mensal: Double): Usuario
+ +excluir(id: String): void
+ +adicionar_meta_mensal(meta_mensal: Double): void
+ +get_meta_mensal(): Double
 }
 
 class Despesa {
-  -String id
-  -String nome
-  -Double valor
-  -String descricao
-  -Date data
-  -DespesaStatus status
-  -Bool fixa
-  +Despesa criar(String nome, Double valor, String descricao, Date data, DespesaStatus status, Bool fixa)
-  +Despesa recuperar(String id)
-  +Despesa atualizar(String id, String nome, Double valor, String descricao, Date data, DespesaStatus status, Bool fixa)
-  +void excluir(String id)
-  +List<Despesa> listar()
-  +view_expense_summary(Date start_date, Date end_date)
-  +search_expense(String nome, String category_nome)
-  +export_expenses(Date start_date, Date end_date)
+ -id: String
+ -nome: String
+ -valor: Double
+ -descricao: String
+ -data: Date
+ -status: DespesaStatus
+ -fixa: Bool
+ +criar(nome: String, valor: Double, descricao: String,
+  data: Date, status: DespesaStatus, fixa: Bool): Despesa
+ +recuperar(id: String): Despesa
+ +atualizar(id: String, nome: String, valor: Double, descricao: String, 
+  data: Date, status: DespesaStatus, fixa: Bool): Despesa
+ +excluir(id: String): void
+ +listar(): List<Despesa>
+ +ver_resumo_de_despesas(start_date: Date, end_date: Date)
+ +pesquisa_despesa(nome: String, category_nome: String)
+ +despesas_de_exportação(start_date: Date, end_date: Date)
 }
 
 class Categoria {
-  -String id
-  -String nome
-  -String descricao
-  +Categoria criar(String title, String descricao)
-  +Categoria recuperar(String id)
-  +Categoria atualizar(String id, String title, String descricao)
-  +void excluir(String id)
-  +List<Categoria> listar()
+ -id: String
+ -nome: String
+ -descricao: String
+ +criar(title: String, descricao: String): Categoria
+ +recuperar(id: String): Categoria
+ +atualizar(id: String, title: String, descricao: String): Categoria
+ +excluir(id: String): void
+ +listar(): List<Categoria>
 }
 
 enum DespesaStatus {
-  PAID
-  PAY
+ Paga
+ A Pagar
 }
 
 Usuario"1" -down- "0..*"Despesa
 Usuario"1" -right- "0..*"Categoria
-Despesa"0.." -up- "0.."Categoria
+Despesa"0..*" -up- "0..*"Categoria
 Despesa -left- DespesaStatus
 
 @enduml

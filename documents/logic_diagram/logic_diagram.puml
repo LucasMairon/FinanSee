@@ -6,7 +6,7 @@ skinparam TableBorderColor black
 skinparam ArrowColor black
 skinparam ArrowFontSize 14
 
-entity "usuarios" as usuario {
+entity "Usuario" as usuario {
   + id : varchar(36) [pk, unique, not null]
   nome : varchar(255)
   email : varchar(255) [unique, not null]
@@ -16,34 +16,31 @@ entity "usuarios" as usuario {
   renda_fixa : decimal(10, 2)
   renda_extra : decimal(10, 2)
   meta_mensal : decimal(10, 2)
+  --
 }
 
-entity "despesas" as despesa {
+entity "Despesa" as despesa {
   + id : varchar(36) [pk, unique, not null]
   nome : varchar(255) [not null]
   valor : decimal(10, 2) [not null]
   descricao : text
   data : date [not null]
-  status : enum('PAID', 'PAY') [not null]
+  status : enum('Paga', 'A Pagar') [not null]
   fixa : boolean
   usuario_id : varchar(36) [fk, not null]
   categoria_id : varchar(36) [fk]
+  --
 }
 
-entity "categorias" as categoria {
+entity "Categoria" as categoria {
   + id : varchar(36) [pk, unique, not null]
   nome : varchar(255) [unique, not null]
   descricao : text
+  --
 }
 
 usuario ||--o{ despesa : possui
-usuario }|--o{ categoria : gerencia
-despesa }o--|| categoria : pertence a
-despesa --|> despesastatus : possui status
-
-enum despesastatus {
-  PAID
-  PAY
-}
+usuario ||--o{ categoria : gerencia
+despesa }o--o{ categoria : pertence as
 
 @enduml
