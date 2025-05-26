@@ -1,7 +1,7 @@
 # FinanSee
 
- <div style="text-align: center; width: 100%;">
-     <img src="logo/logo.jpeg" alt="Logo do projeto">
+ <div align="center">
+     <img src="logo/logo.svg" alt="Logo do projeto">
 </div>
 
 ## Introdução 📖
@@ -13,7 +13,7 @@ Atualmente, muitas pessoas enfrentam dificuldades no controle e organização de
 O FinanSee busca solucionar este problema, oferecendo uma plataforma que prioriza a experiência do usuário, a segurança dos dados e funcionalidades simplificadas. Nosso foco é fornecer recursos que agreguem valor ao cotidiano financeiro dos usuários, permitindo que tomem decisões mais conscientes e estratégicas.
 
 
-## Tecnologias Utilizadas 🛠 
+## Tecnologias Utilizadas 🛠
 O FinanSee é desenvolvido utilizando as seguintes tecnologias:
 
 - Backend:
