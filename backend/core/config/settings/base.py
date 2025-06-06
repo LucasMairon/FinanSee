@@ -18,7 +18,9 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 
-LOCAL_APPS = []
+LOCAL_APPS = [
+    'users',
+]
 
 THIRD_PARTY_APPS = [
     'corsheaders',
@@ -30,6 +32,7 @@ THIRD_PARTY_APPS = [
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
+AUTH_USER_MODEL = 'users.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

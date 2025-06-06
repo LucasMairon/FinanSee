@@ -6,4 +6,5 @@ djangorestframework_simplejwt==5.5.0
 djoser==2.3.1
 drf-spectacular==0.28.0
 Markdown==3.8
+python-dateutil==2.9.0.post0
 python-decouple==3.8
