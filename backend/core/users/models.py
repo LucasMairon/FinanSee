@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
@@ -17,7 +18,12 @@ from .validators import (
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+        unique=True,
+    )
     name = models.CharField(
         _("name"),
         max_length=150,
@@ -45,7 +51,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(
         _("phone number"),
         max_length=11,
-        validators=[phone_number_regex_validator, MinLengthValidator(11)]
+        validators=[phone_number_regex_validator, MinLengthValidator(11)],
+        unique=True
     )
     income = models.DecimalField(
         _("income"),
