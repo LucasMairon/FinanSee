@@ -9,65 +9,86 @@ skinparam ClassBackgroundColor #F5F1A1
 
 
 class Usuario {
- -id: String
- -nome: String
- -email: String
- -numero_de_telefone: String
- -data_de_aniversario: Date
- -senha: String
- -renda_fixa: Double
- -renda_extra: Double
- -meta_mensal: Double
- +login(email: String, senha: String): Bool
- +criar(nome: String, email: String, numero_de_telefone: String, data_de_aniversario: Date, 
-  senha: String, renda_fixsa: Double, renda_extra: Double, meta_mensal: Double): Usuario
- +recuperar(id: String): Usuario
- +atualizar(id: String, nome: String, email: String, numero_de_telefone: String,
- senha: String, renda_fixa: Double, renda_extra: Double, meta_mensal: Double): Usuario
- +excluir(id: String): void
- +adicionar_meta_mensal(meta_mensal: Double): void
- +get_meta_mensal(): Double
+    -id: String
+    -nome: String
+    -email: String
+    -cpf: String
+    -numero_de_telefone: String
+    -data_de_aniversario: Date
+    -senha: String
+    -renda_mensal: Double
+    +login(email: String, senha: String): Bool
+    +criar(nome: String, email: String, cpf: String, numero_de_telefone: String, 
+    data_de_aniversario: Date, senha: String, renda_mensal: Double): Usuario
+    +recuperar(id: String): Usuario
+    +atualizar(id: String, nome: String, email: String, cpf: String, numero_de_telefone: String,
+    senha: String, renda_mensal: Double): Usuario
+    +excluir(id: String): void
 }
 
 class Despesa {
- -id: String
- -nome: String
- -valor: Double
- -descricao: String
- -data: Date
- -status: DespesaStatus
- -fixa: Bool
- +criar(nome: String, valor: Double, descricao: String,
-  data: Date, status: DespesaStatus, fixa: Bool): Despesa
- +recuperar(id: String): Despesa
- +atualizar(id: String, nome: String, valor: Double, descricao: String, 
-  data: Date, status: DespesaStatus, fixa: Bool): Despesa
- +excluir(id: String): void
- +listar(): List<Despesa>
- +ver_resumo_de_despesas(start_date: Date, end_date: Date)
- +pesquisa_despesa(nome: String, category_nome: String)
- +despesas_de_exportação(start_date: Date, end_date: Date)
+    -id: String
+    -nome: String
+    -valor: Double
+    -descricao: String
+    -data: Date
+    -status: DespesaStatus
+    -fixa: Bool
+    +criar(nome: String, valor: Double, descricao: String,
+    data: Date, status: DespesaStatus, fixa: Bool): Despesa
+    +recuperar(id: String): Despesa
+    +atualizar(id: String, nome: String, valor: Double, descricao: String, 
+    data: Date, status: DespesaStatus, fixa: Bool): Despesa
+    +excluir(id: String): void
+    +listar(): List<Despesa>
+    +ver_resumo_de_despesas(start_date: Date, end_date: Date)
+    +pesquisa_despesa(nome: String, category_nome: String)
+    +despesas_de_exportação(start_date: Date, end_date: Date)
 }
+
 
 class Categoria {
- -id: String
- -nome: String
- -descricao: String
- +criar(title: String, descricao: String): Categoria
- +recuperar(id: String): Categoria
- +atualizar(id: String, title: String, descricao: String): Categoria
- +excluir(id: String): void
- +listar(): List<Categoria>
+    -id: String
+    -nome: String
+    -descricao: String
+    +criar(title: String, descricao: String): Categoria
+    +recuperar(id: String): Categoria
+    +atualizar(id: String, title: String, descricao: String): Categoria
+    +excluir(id: String): void
+    +listar(): List<Categoria>
 }
+
+
+class Periodo {
+    -id: String
+    -mes: Date
+    -meta_mensal: Double
+    -renda_extra: Double
+    -saldo_do_mes: Double
+    +criar(mes: Date, meta_mensal: Double, renda_extra: Double, 
+    saldo_do_mes: Double): Periodo
+    +recuperar(id: String): Periodo
+    +atualizar(id: String, mes: Date, meta_mensal: Double,
+    renda_extra: Double, saldo_do_mes: Double): Periodo
+    +excluir(id: String): void
+    +listar_despesas(): List<Despesa>
+    +get_salto_total(): Double
+    +adicionar_meta_mensal(meta_mensal: Double): void
+    +get_meta_mensal(): Double
+}
+
 
 enum DespesaStatus {
- Paga
- A Pagar
+    Paga
+    A Pagar
 }
 
+
+Usuario"1" -- "0..*"Periodo
 Usuario"1" -down- "0..*"Despesa
 Usuario"1" -right- "0..*"Categoria
-Despesa"0..*" -up- "0..*"Categoria
-Despesa -left- DespesaStatus
+Despesa"0.." -up- "0.."Categoria
+Despesa -right- DespesaStatus
+Despesa"1..*" -left- "1"Periodo
 
 @enduml
