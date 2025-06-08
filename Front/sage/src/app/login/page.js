@@ -1,43 +1,47 @@
 "use client";
-import { useState } from "react";
-import styles from "./login.module.css";
+import React, { useState } from "react";
+// Libs
+import Image from "next/image";
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+// Components
+import LoginForm from "../components/loginForm";
+import LeftPanel from "../components/leftPanel";
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    console.log("Email:", email, "Senha:", password);
+import {
+  Container,
+  RightPanel,
+  Header,
+  RightPanelContent,
+  ButtonMode,
+} from "./styles";
+
+export default function Login() {
+  const [darkMode, setDarkMode] = useState(false);
+
+  const switchMode = () => {
+    setDarkMode(!darkMode);
   };
-
   return (
-    <div className={styles.container}>
-      <form className={styles.card} onSubmit={handleLogin}>
-        <h1 className={styles.title}>Login</h1>
-        <input
-          type="email"
-          placeholder="Seu email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className={styles.input}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Sua senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className={styles.input}
-          required
-        />
-        <button type="submit" className={styles.button}>
-          Entrar
-        </button>
-        <p className={styles.signup}>
-          Não tem uma conta? <a href="#">Cadastre-se</a>
-        </p>
-      </form>
-    </div>
+    <Container>
+      <LeftPanel />
+      <RightPanel>
+        <Header>
+          <ButtonMode
+            className="transition-opacity active:opacity-50 hover:opacity-80"
+            onClick={switchMode}
+          >
+            {darkMode ? (
+              <Image src="/Logo_dark.svg" alt="Logo" width={50} height={50} />
+            ) : (
+              <Image src="/Logo_light.svg" alt="Logo" width={50} height={50} />
+            )}
+          </ButtonMode>
+          <Image src="/Logo_green.svg" alt="Logo" width={120} height={70} />
+        </Header>
+        <RightPanelContent>
+          <LoginForm />
+        </RightPanelContent>
+      </RightPanel>
+    </Container>
   );
 }
