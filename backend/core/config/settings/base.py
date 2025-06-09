@@ -142,3 +142,13 @@ SPECTACULAR_SETTINGS = {
         'url': 'https://github.com/Lidianacosta'
     },
 }
+
+
+DJOSER = {
+    'SERIALIZERS': {
+        'user': 'users.api.serializers.UserSerializer',
+        'user_create': 'users.api.serializers.UserCreateSerializer',
+        'current_user': 'users.api.serializers.UserSerializer',
+        'user_delete': 'users.api.serializers.UserSerializer'
+    }
+}
