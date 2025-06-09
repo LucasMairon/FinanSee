@@ -132,8 +132,8 @@ SIMPLE_JWT = {
 
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'SAGE (Sistema de Análise e Gestão Econômica) API',
-    'DESCRIPTION': 'Esse é o repositório do projeto que será utilizado na disciplina de MFES (Métodos Formais de Engenharia de Software).',
+    'TITLE': 'FinanSee API',
+    'DESCRIPTION': 'FinanSee é uma aplicação web desenvolvida para auxiliar no gerenciamento financeiro e orçamentário pessoal. Em um cenário econômico frequentemente incerto, onde a busca por estabilidade financeira é constante, o FinanSee surge como uma solução eficaz e intuitiva. Nosso objetivo é capacitar os usuários a controlar suas finanças de maneira organizada, prática e segura, facilitando o alcance de metas financeiras e promovendo a educação financeira.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'CONTACT': {
