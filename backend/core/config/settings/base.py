@@ -18,7 +18,9 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 
-LOCAL_APPS = []
+LOCAL_APPS = [
+    'users',
+]
 
 THIRD_PARTY_APPS = [
     'corsheaders',
@@ -30,6 +32,7 @@ THIRD_PARTY_APPS = [
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
+AUTH_USER_MODEL = 'users.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -122,15 +125,14 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(weeks=1),
     'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': True,
 }
 
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'SAGE (Sistema de Análise e Gestão Econômica) API',
-    'DESCRIPTION': 'Esse é o repositório do projeto que será utilizado na disciplina de MFES (Métodos Formais de Engenharia de Software).',
+    'TITLE': 'FinanSee API',
+    'DESCRIPTION': 'FinanSee é uma aplicação web desenvolvida para auxiliar no gerenciamento financeiro e orçamentário pessoal. Em um cenário econômico frequentemente incerto, onde a busca por estabilidade financeira é constante, o FinanSee surge como uma solução eficaz e intuitiva. Nosso objetivo é capacitar os usuários a controlar suas finanças de maneira organizada, prática e segura, facilitando o alcance de metas financeiras e promovendo a educação financeira.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'CONTACT': {
@@ -138,4 +140,14 @@ SPECTACULAR_SETTINGS = {
         'email': 'lidiana.souza@alunos.ufersa.edu.br',
         'url': 'https://github.com/Lidianacosta'
     },
+}
+
+
+DJOSER = {
+    'SERIALIZERS': {
+        'user': 'users.api.serializers.UserSerializer',
+        'user_create': 'users.api.serializers.UserCreateSerializer',
+        'current_user': 'users.api.serializers.UserSerializer',
+        'user_delete': 'users.api.serializers.UserSerializer'
+    }
 }
