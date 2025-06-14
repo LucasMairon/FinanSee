@@ -42,22 +42,26 @@ class User(AbstractBaseUser, PermissionsMixin):
             cpf_regex_validator,
             MinLengthValidator(11)
         ],
-        unique=True
+        unique=True,
+        null=True,
     )
     date_of_birth = models.DateField(
         _("date of birth"),
-        validators=[legal_age_validator]
+        validators=[legal_age_validator],
+        null=True,
     )
     phone_number = models.CharField(
         _("phone number"),
         max_length=11,
         validators=[phone_number_regex_validator, MinLengthValidator(11)],
-        unique=True
+        unique=True,
+        null=True,
     )
     income = models.DecimalField(
         _("income"),
         max_digits=10,
-        decimal_places=2
+        decimal_places=2,
+        default=0.00,
     )
     is_staff = models.BooleanField(
         _("staff status"),
