@@ -14,13 +14,19 @@ export const RightPanel = styled.div`
   display: flex;
   flex-direction: column;
   padding: 1rem;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    flex: auto;
+  }
 `;
 
 export const RightPanelContent = styled.div`
-  flex: 1;
+  flex: auto;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
 `;
 
 export const Header = styled.div`

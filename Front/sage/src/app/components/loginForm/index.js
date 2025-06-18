@@ -1,14 +1,21 @@
 import React, { useState } from "react";
+
+// Libs
+import { redirect } from "next/navigation";
+
 // Components
-import InputForm from "../../components/inputForm";
+import InputForm from "../inputForm";
+import InputFormPassword from "../inputFormPassword";
 
 // Styles
 import {
   FormWrapper,
-  Content,
-  InputGroup,
+  Header,
   ForgotPassword,
   LoginButton,
+  SignIn,
+  SignUp,
+  ButtonLoginContainer,
 } from "./styles";
 
 export default function LoginForm() {
@@ -17,27 +24,28 @@ export default function LoginForm() {
 
   return (
     <FormWrapper>
-      <Content>
-        <h2>Login</h2>
-        <span>Cadastre-se</span>
-      </Content>
-
+      <Header>
+        <SignIn>Login</SignIn>
+        <SignUp onClick={() => redirect("/signUp")}>Cadastre-se</SignUp>
+      </Header>
       <InputForm
         label="Email"
         placeholder="Ex:email@email.com"
         value={email || ""}
         onChange={(e) => setEmail(e.target.value)}
       />
-
-      <InputForm
+      <InputFormPassword
         label="Senha"
         placeholder="Sua senha aqui"
         value={password || ""}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <ForgotPassword href="#">Esqueceu sua senha?</ForgotPassword>
 
-      <LoginButton>Fazer Login</LoginButton>
+      <ButtonLoginContainer>
+        <ForgotPassword href="#">Esqueceu sua senha?</ForgotPassword>
+
+        <LoginButton>Fazer Login</LoginButton>
+      </ButtonLoginContainer>
     </FormWrapper>
   );
 }

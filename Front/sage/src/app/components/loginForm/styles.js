@@ -9,47 +9,26 @@ export const FormWrapper = styled.form`
   gap: 1.2rem;
 `;
 
-export const Content = styled.div`
+export const Header = styled.div`
   display: flex;
   gap: 1rem;
-
-  h2 {
-    font-size: 1.8rem;
-    font-family: var(--font-roboto);
-    font-weight: 600;
-    color: ${backgroundDark};
-    border-bottom: 2px solid #24b36b;
-  }
-
-  span {
-    font-size: 1.8rem;
-    font-family: var(--font-roboto);
-    font-weight: 600;
-    color: #787878;
-    cursor: pointer;
-  }
 `;
 
-export const InputGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
+export const SignIn = styled.span`
+  font-size: 1.8rem;
+  font-family: var(--font-roboto);
+  font-weight: 600;
+  color: ${backgroundDark};
+  border-bottom: 2px solid #24b36b;
+`;
 
-  label {
-    font-size: 0.9rem;
-    color: #333;
-    font-family: var(--font-roboto);
-    font-weight: 400;
-  }
-
-  input {
-    padding: 0.6rem;
-    border: 1px solid #888;
-    border-radius: 4px;
-    font-size: 1rem;
-    font-family: var(--font-roboto);
-    font-weight: 400;
-  }
+export const SignUp = styled.span`
+  font-size: 1.8rem;
+  font-family: var(--font-roboto);
+  font-weight: 600;
+  color: #787878;
+  border-bottom: none;
+  cursor: pointer;
 `;
 
 export const ForgotPassword = styled.a`
@@ -58,6 +37,8 @@ export const ForgotPassword = styled.a`
   text-decoration: underline;
   font-family: var(--font-roboto);
   font-weight: 400;
+  margin-top: -1.2rem;
+  margin-bottom: 2rem;
 `;
 
 export const LoginButton = styled.button`
@@ -65,9 +46,14 @@ export const LoginButton = styled.button`
   color: white;
   padding: 0.8rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 20px;
   font-family: var(--font-roboto);
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
+`;
+
+export const ButtonLoginContainer = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
