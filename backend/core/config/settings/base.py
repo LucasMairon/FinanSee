@@ -19,12 +19,14 @@ DJANGO_APPS = [
 ]
 
 LOCAL_APPS = [
-    'users',
     'categories',
+    'periods',
+    'users',
 ]
 
 THIRD_PARTY_APPS = [
     'corsheaders',
+    'django_celery_beat',
     'djoser',
     'drf_spectacular',
     'rest_framework',

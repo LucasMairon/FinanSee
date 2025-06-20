@@ -1,12 +1,16 @@
 from django.urls import include, path
 
 from rest_framework import routers
-from users.api.views import LogoutView
 
 from categories.api.views import CategoryViewSet
+from periods.api.views import PeriodViewSet
+
+from users.api.views import LogoutView
+
 
 router = routers.SimpleRouter()
 router.register('categories', CategoryViewSet, 'category')
+router.register('periods', PeriodViewSet, 'period')
 
 urlpatterns = [
     path('auth/', include('djoser.urls.jwt')),
