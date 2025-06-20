@@ -33,12 +33,11 @@ class Despesa {
     -descricao: String
     -data: Date
     -status: DespesaStatus
-    -fixa: Bool
     +criar(nome: String, valor: Double, descricao: String,
-    data: Date, status: DespesaStatus, fixa: Bool): Despesa
+    data: Date, status: DespesaStatus): Despesa
     +recuperar(id: String): Despesa
     +atualizar(id: String, nome: String, valor: Double, descricao: String, 
-    data: Date, status: DespesaStatus, fixa: Bool): Despesa
+    data: Date, status: DespesaStatus): Despesa
     +excluir(id: String): void
     +listar(): List<Despesa>
     +ver_resumo_de_despesas(start_date: Date, end_date: Date)
@@ -62,19 +61,16 @@ class Categoria {
 class Periodo {
     -id: String
     -mes: Date
-    -meta_mensal: Double
-    -renda_extra: Double
+    -renda_do_mes: Double
     -saldo_do_mes: Double
-    +criar(mes: Date, meta_mensal: Double, renda_extra: Double, 
+    +criar(mes: Date, renda_do_mes: Double, 
     saldo_do_mes: Double): Periodo
     +recuperar(id: String): Periodo
-    +atualizar(id: String, mes: Date, meta_mensal: Double,
-    renda_extra: Double, saldo_do_mes: Double): Periodo
+    +atualizar(id: String, mes: Date,renda_do_mes: Double,
+    saldo_do_mes: Double): Periodo
     +excluir(id: String): void
     +listar_despesas(): List<Despesa>
-    +get_salto_total(): Double
-    +adicionar_meta_mensal(meta_mensal: Double): void
-    +get_meta_mensal(): Double
+    +get_saldo_total(): Double
 }
 
 
@@ -84,11 +80,11 @@ enum DespesaStatus {
 }
 
 
-Usuario"1" -- "0..*"Periodo
+Usuario"1" -- "1..*"Periodo
 Usuario"1" -down- "0..*"Despesa
 Usuario"1" -right- "0..*"Categoria
 Despesa"0.." -up- "0.."Categoria
 Despesa -right- DespesaStatus
-Despesa"1..*" -left- "1"Periodo
+Despesa"0..*" -left- "1"Periodo
 
 @enduml
