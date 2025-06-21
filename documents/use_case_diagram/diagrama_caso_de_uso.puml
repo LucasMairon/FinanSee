@@ -9,17 +9,19 @@ skinparam UsecaseBorderColor black
 skinparam ArrowColor black
 
 
-rectangle "Sistema de Gestão Pessoal Financeira (SGPF)" {
-    (Gerenciar Usuário) as gerenciar_usuario
+rectangle "Finansee" {
+    (Realizar Login) as realizar_login
     (Cadastrar Usuário) as cadastrar_usuario
+    (Gerenciar Usuário) as gerenciar_usuario
     (Gerenciar Despesas) as gerenciar_despesas
     (Gerenciar Categoria) as gerenciar_categoria
     (Notificar Despesas) as notificar_depesas
     (Visualizar Resumo das Despesas) as visualizar_resumo_despesas
-    (Definir Meta Mensal) as definir_meta
+    (Visualizar_gasto_mensal) as visualizar_gasto_mensal
     (Buscar Despesas) as buscar_despesas
     (Exportar Resumo Mensal) as exportar_resumo_mensal
-    (Realizar Login) as realizar_login
+    (Redefinir Senha) as redefinir_senha
+    (Gerenciar Periodo) as gerenciar_periodo
     (Validar Informações) as validar_informacoes
 }
 
@@ -30,26 +32,28 @@ rectangle "Sistema de Gestão Pessoal Financeira (SGPF)" {
 ' Casos de uso relacionados ao sistema
 sistema -- validar_informacoes
 sistema -- notificar_depesas
+sistema -- gerenciar_periodo
 
 ' Casos de uso relacionados ao usuario
 usuario -- realizar_login
 usuario -- gerenciar_usuario
 usuario -up- cadastrar_usuario
+usuario -- redefinir_senha
 
 gerenciar_usuario ..> realizar_login: <<include>>
 
 ' Casos de uso relacionados as despesas
 usuario -- gerenciar_despesas
 usuario -- visualizar_resumo_despesas
-usuario -- definir_meta
 usuario -- buscar_despesas
 usuario -- exportar_resumo_mensal
+usuario -- visualizar_gasto_mensal
 
 gerenciar_despesas ..> realizar_login: <<include>>
 visualizar_resumo_despesas ..> realizar_login: <<include>>
-definir_meta ..> realizar_login: <<include>>
 buscar_despesas ..> realizar_login: <<include>>
 exportar_resumo_mensal ..> realizar_login <<include>>
+visualizar_gasto_mensal ..> realizar_login <<include>>
 
 ' Casos de uso relacionados as categorias
 usuario -- gerenciar_categoria
