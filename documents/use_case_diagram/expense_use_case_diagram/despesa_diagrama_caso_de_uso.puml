@@ -1,0 +1,38 @@
+@startuml
+
+left to right direction
+
+skinparam ActorBorderColor black
+skinparam ActorBackgroundColor white
+skinparam UsecaseBackgroundColor white
+skinparam UsecaseBorderColor black
+skinparam ArrowColor black
+
+rectangle "Finansee"{
+    (Realizar Login) as realizar_login
+    (Gerenciar Despesas) as gerenciar_despesas
+    (Visualizar Resumo das Despesas) as visualizar_resumo_despesas
+    (Visualizar Gasto Mensal) as visualizar_gasto_mensal
+    (Buscar Despesas) as buscar_despesas
+    (Exportar Resumo Mensal) as exportar_resumo_mensal
+}
+
+:Usuario: as usuario
+
+usuario -- gerenciar_despesas
+usuario -- visualizar_resumo_despesas
+usuario -- buscar_despesas
+usuario -- exportar_resumo_mensal
+usuario -- visualizar_gasto_mensal
+
+gerenciar_despesas ..> realizar_login: <<include>>
+visualizar_resumo_despesas ..> realizar_login: <<include>>
+buscar_despesas ..> realizar_login: <<include>>
+exportar_resumo_mensal ..> realizar_login: <<include>>
+visualizar_gasto_mensal ..> realizar_login: <<include>>
+
+
+
+
+
+@enduml
