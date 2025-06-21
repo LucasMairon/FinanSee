@@ -1,0 +1,28 @@
+@startuml
+
+left to right direction
+
+skinparam ActorBorderColor black
+skinparam ActorBackgroundColor white
+skinparam UsecaseBackgroundColor white
+skinparam UsecaseBorderColor black
+skinparam ArrowColor black
+
+rectangle "Finansee" {
+    (Realizar Login) as realizar_login
+    (Cadastrar Usuário) as cadastrar_usuario
+    (Gerenciar Usuário) as gerenciar_usuario
+    (Redefinir Senha) as redefinir_senha
+}
+
+:Usuario: as usuario 
+
+usuario -- realizar_login
+usuario -- gerenciar_usuario
+usuario -up- cadastrar_usuario
+usuario -- redefinir_senha
+
+gerenciar_usuario ..> realizar_login: <<include>>
+
+
+@enduml
