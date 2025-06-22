@@ -5,7 +5,7 @@ from django.contrib.auth.models import PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 from django.core.mail import send_mail
 from django.utils import timezone
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator, MinValueValidator
 from .managers import CustomUserManager
 from .validators import (
     cpf_regex_validator,
@@ -62,6 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_digits=10,
         decimal_places=2,
         default=0.00,
+        validators=[MinValueValidator(0)],
     )
     is_staff = models.BooleanField(
         _("staff status"),
