@@ -18,3 +18,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
         model = User
         fields = ('name', 'email', 'cpf', 'date_of_birth',
                   'phone_number', 'income', 'password', )
+
+    def create(self, validated_data):
+        return User.objects.create_user(**validated_data)
