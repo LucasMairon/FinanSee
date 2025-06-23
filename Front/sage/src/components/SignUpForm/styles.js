@@ -1,12 +1,17 @@
 import styled from "styled-components";
 
-import { backgroundDark } from "@/app/assets/colors";
+import { backgroundDark } from "@/assets/colors";
 
-export const FormWrapper = styled.form`
-  width: 350px;
+export const FormWrapper = styled.div`
+  width: 70%;
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    display: auto;
+  }
 `;
 
 export const Header = styled.div`
@@ -50,16 +55,20 @@ export const SignUpButton = styled.button`
 export const RowInput = styled.div`
   display: flex;
   flex-direction: row;
+  gap: 1rem;
 
   @media (max-width: 768px) {
     flex-direction: column;
+    gap: 2rem;
   }
 `;
 
-export const SpaceForm = styled.div`
-  width: 15px;
+export const SpaceVertical = styled.div`
+  display: flex;
+  height: 30px;
+`;
 
-  @media (max-width: 768px) {
-    width: 0;
-  }
+export const SpaceVertical10 = styled.div`
+  display: flex;
+  height: 10px;
 `;

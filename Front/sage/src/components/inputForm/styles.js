@@ -1,10 +1,9 @@
 import styled from "styled-components";
 
-import { backgroundWhite } from "@/app/assets/colors";
+import { backgroundWhite } from "@/assets/colors";
 
 export const Container = styled.div`
   position: relative;
-  margin: 30px 0;
   width: 100%;
   background-color: transparent;
 `;
@@ -24,7 +23,7 @@ export const StyledLabel = styled.label`
 
 export const StyledInput = styled.input`
   width: 100%;
-  padding: 16px 12px;
+  padding: 14px 12px;
   font-size: 14px;
   border: 2px solid #4c4c4c;
   background-color: transparent;

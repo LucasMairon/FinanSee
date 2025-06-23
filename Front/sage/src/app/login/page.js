@@ -1,11 +1,12 @@
 "use client";
 import React, { useState } from "react";
+
 // Libs
 import Image from "next/image";
 
 // Components
-import LoginForm from "../components/loginForm";
-import LeftPanel from "../components/leftPanel";
+import LoginForm from "../../components/loginForm";
+import LeftPanel from "../../components/leftPanel";
 
 import {
   Container,

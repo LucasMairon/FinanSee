@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import Image from "next/image";
 
 // Components
-import LeftPanel from "../components/leftPanel";
-import SignUpForm from "../components/SignUpForm";
+import LeftPanel from "../../components/leftPanel";
+import SignUpForm from "../../components/SignUpForm";
 
 import {
   Container,
@@ -17,6 +17,7 @@ import {
 
 export default function SignUp() {
   const [darkMode, setDarkMode] = useState(false);
+  const [stepFinal, setStepFinal] = useState(false);
 
   const switchMode = () => {
     setDarkMode(!darkMode);
@@ -39,7 +40,7 @@ export default function SignUp() {
           <Image src="/Logo_green.svg" alt="Logo" width={120} height={70} />
         </Header>
         <RightPanelContent>
-          <SignUpForm />
+          <SignUpForm stepFinal={stepFinal} setStepFinal={setStepFinal} />
         </RightPanelContent>
       </RightPanel>
     </Container>

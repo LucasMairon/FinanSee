@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 
 // Libs
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 // Components
 import InputForm from "../inputForm";
+import InputFormPassword from "../inputFormPassword";
 
 // Styles
 import {
@@ -14,11 +15,14 @@ import {
   SignUp,
   Content,
   RowInput,
-  SpaceForm,
   SignUpButton,
+  SpaceVertical,
+  SpaceVertical10,
 } from "./styles";
 
-export default function SignUpForm() {
+export default function SignUpForm({ stepFinal, setStepFinal }) {
+  const router = useRouter();
+
   const [name, setName] = useState("");
   const [emailSignUp, setEmailSignUp] = useState("");
   const [document, setDocument] = useState("");
@@ -28,10 +32,6 @@ export default function SignUpForm() {
   const [passwordSignUp, setPasswordSignUp] = useState("");
   const [confPasswordSignUp, setConfPasswordSignUp] = useState("");
 
-  const [stepFinal, setStepFinal] = useState(false);
-
-  console.log(stepFinal, "AQUI");
-
   const nextStep = () => {
     setStepFinal(true);
   };
@@ -39,9 +39,10 @@ export default function SignUpForm() {
   return (
     <FormWrapper>
       <Header>
-        <SignIn onClick={() => redirect("/login")}>Login</SignIn>
+        <SignIn onClick={() => router.push("/login")}>Login</SignIn>
         <SignUp>Cadastre-se</SignUp>
       </Header>
+      <SpaceVertical10 />
       {!stepFinal ? (
         <Content>
           <InputForm
@@ -50,6 +51,7 @@ export default function SignUpForm() {
             value={name || ""}
             onChange={(e) => setName(e.target.value)}
           />
+          <SpaceVertical />
           <RowInput>
             <InputForm
               label="E-mail"
@@ -57,7 +59,6 @@ export default function SignUpForm() {
               value={emailSignUp || ""}
               onChange={(e) => setEmailSignUp(e.target.value)}
             />
-            <SpaceForm />
             <InputForm
               label="CPF"
               placeholder="informe seu cpf"
@@ -65,6 +66,7 @@ export default function SignUpForm() {
               onChange={(e) => setDocument(e.target.value)}
             />
           </RowInput>
+          <SpaceVertical />
           <RowInput>
             <InputForm
               label="Telefone"
@@ -72,7 +74,6 @@ export default function SignUpForm() {
               value={phone || ""}
               onChange={(e) => setPhone(e.target.value)}
             />
-            <SpaceForm />
             <InputForm
               label="Data de nascimento"
               placeholder="informe sua data de nascimento"
@@ -80,8 +81,11 @@ export default function SignUpForm() {
               onChange={(e) => setBirthDate(e.target.value)}
             />
           </RowInput>
+          <SpaceVertical />
 
-          <SignUpButton onClick={() => nextStep()}>Prosseguir</SignUpButton>
+          <SignUpButton type="button" onClick={() => nextStep()}>
+            Prosseguir
+          </SignUpButton>
         </Content>
       ) : (
         <Content>
@@ -91,18 +95,21 @@ export default function SignUpForm() {
             value={incomeFixed || ""}
             onChange={(e) => setIncomeFixed(e.target.value)}
           />
-          <InputForm
+          <SpaceVertical />
+          <InputFormPassword
             label="Senha"
             placeholder="crie uma senha"
             value={passwordSignUp || ""}
             onChange={(e) => setPasswordSignUp(e.target.value)}
           />
-          <InputForm
+          <SpaceVertical />
+          <InputFormPassword
             label="Confirma senha"
             placeholder="confirme sua senha"
             value={confPasswordSignUp || ""}
             onChange={(e) => setConfPasswordSignUp(e.target.value)}
           />
+          <SpaceVertical />
 
           <SignUpButton>Cadastrar</SignUpButton>
         </Content>

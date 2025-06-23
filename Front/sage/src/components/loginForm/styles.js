@@ -1,12 +1,17 @@
 import styled from "styled-components";
 
-import { backgroundDark } from "@/app/assets/colors";
+import { backgroundDark } from "@/assets/colors";
 
-export const FormWrapper = styled.form`
-  width: 350px;
+export const FormWrapper = styled.div`
+  width: 70%;
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    display: auto;
+  }
 `;
 
 export const Header = styled.div`
@@ -37,8 +42,9 @@ export const ForgotPassword = styled.a`
   text-decoration: underline;
   font-family: var(--font-roboto);
   font-weight: 400;
-  margin-top: -1.2rem;
+  margin-top: -0.5rem;
   margin-bottom: 2rem;
+  cursor: pointer;
 `;
 
 export const LoginButton = styled.button`
@@ -56,4 +62,8 @@ export const LoginButton = styled.button`
 export const ButtonLoginContainer = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+export const SpaceVertical = styled.div`
+  display: flex;
 `;
