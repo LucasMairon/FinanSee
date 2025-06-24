@@ -10,6 +10,10 @@ export const Wrapper = styled.div`
   justify-content: center;
   gap: 2rem;
   align-items: center;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const Row = styled.div`

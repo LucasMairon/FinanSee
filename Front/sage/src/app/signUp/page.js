@@ -1,12 +1,11 @@
 "use client";
 import React, { useState } from "react";
-
 // Libs
 import Image from "next/image";
 
 // Components
-import LoginForm from "../../components/loginForm";
 import LeftPanel from "../../components/leftPanel";
+import SignUpForm from "../../components/SignUpForm";
 
 import {
   Container,
@@ -16,8 +15,9 @@ import {
   ButtonMode,
 } from "./styles";
 
-export default function Login() {
+export default function SignUp() {
   const [darkMode, setDarkMode] = useState(false);
+  const [stepFinal, setStepFinal] = useState(false);
 
   const switchMode = () => {
     setDarkMode(!darkMode);
@@ -40,7 +40,7 @@ export default function Login() {
           <Image src="/Logo_green.svg" alt="Logo" width={120} height={70} />
         </Header>
         <RightPanelContent>
-          <LoginForm />
+          <SignUpForm stepFinal={stepFinal} setStepFinal={setStepFinal} />
         </RightPanelContent>
       </RightPanel>
     </Container>
