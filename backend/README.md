@@ -15,7 +15,7 @@
     ```bash
     cd backend
     python3 -m venv .venv
-    source venv/bin/activate # ./venv/Scripts/activate no windows
+    source .venv/bin/activate # ./venv/Scripts/activate no windows
     ```
 3. Baixe o requerimentos de desenvolvimento.
     ```bash
