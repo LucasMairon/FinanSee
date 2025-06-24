@@ -7,6 +7,9 @@ import { useRouter } from "next/navigation";
 import InputForm from "../inputForm";
 import InputFormPassword from "../inputFormPassword";
 
+// Utils
+import { isValidEmail } from "@/validators";
+
 // Styles
 import {
   FormWrapper,
@@ -23,7 +26,19 @@ export default function LoginForm() {
   const router = useRouter();
 
   const [email, setEmail] = useState("");
+  const [errorEmail, setErrorEmail] = useState(false);
   const [password, setPassword] = useState("");
+  const [errorPassword, setErrorPassword] = useState(false);
+
+  const onPressLogin = () => {
+    const validEmail = isValidEmail(email);
+    setErrorEmail(!validEmail);
+    setErrorPassword(!password);
+
+    if (validEmail && password) {
+      console.log("Tudo certo no login");
+    }
+  };
 
   return (
     <FormWrapper>
@@ -37,6 +52,7 @@ export default function LoginForm() {
         placeholder="Ex:email@email.com"
         value={email || ""}
         onChange={(e) => setEmail(e.target.value)}
+        error={errorEmail}
       />
       <SpaceVertical />
       <InputFormPassword
@@ -44,6 +60,7 @@ export default function LoginForm() {
         placeholder="Sua senha aqui"
         value={password || ""}
         onChange={(e) => setPassword(e.target.value)}
+        error={errorPassword}
       />
 
       <ButtonLoginContainer>
@@ -51,7 +68,7 @@ export default function LoginForm() {
           Esqueceu sua senha?
         </ForgotPassword>
 
-        <LoginButton>Fazer Login</LoginButton>
+        <LoginButton onClick={() => onPressLogin()}>Fazer Login</LoginButton>
       </ButtonLoginContainer>
     </FormWrapper>
   );

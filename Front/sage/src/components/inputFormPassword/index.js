@@ -6,16 +6,17 @@ import Image from "next/image";
 // Styles
 import { Container, StyledLabel, StyledInput, ButtonEye } from "./styles";
 
-const InputFormPassword = ({ label, placeholder, value, onChange }) => {
+const InputFormPassword = ({ label, placeholder, value, onChange, error }) => {
   const [visible, setVisible] = useState(false);
   return (
     <Container>
-      <StyledLabel>{label}</StyledLabel>
+      <StyledLabel $error={error}>{label}</StyledLabel>
       <StyledInput
         placeholder={placeholder}
         value={value}
         onChange={onChange}
         type={visible ? "text" : "password"}
+        $error={error}
       />
       <ButtonEye onClick={() => setVisible(!visible)}>
         {visible ? (

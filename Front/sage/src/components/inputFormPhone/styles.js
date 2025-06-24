@@ -15,7 +15,7 @@ export const StyledLabel = styled.label`
   background-color: ${backgroundWhite};
   padding: 0 6px;
   font-size: 12px;
-  color: ${(Props) => (Props.error ? "#FF0000" : "#4c4c4c")};
+  color: ${(Props) => (Props.errorLabelMessage ? "#FF0000" : "#4c4c4c")};
   font-family: var(--font-roboto);
   font-weight: 400;
   z-index: 1;
@@ -26,7 +26,7 @@ export const StyledInput = styled.input`
   padding: 14px 12px;
   font-size: 14px;
   border: ${(Props) =>
-    Props.error ? "2px solid #FF0000" : "2px solid #4c4c4c"};
+    Props.errorLabelMessage ? "2px solid #FF0000" : "2px solid #4c4c4c"};
   background-color: transparent;
   font-family: var(--font-roboto);
   color: #4c4c4c;

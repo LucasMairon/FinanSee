@@ -2,10 +2,22 @@ import React, { useState } from "react";
 
 // Libs
 import { useRouter } from "next/navigation";
+import _ from "lodash";
 
 // Components
 import InputForm from "../inputForm";
 import InputFormPassword from "../inputFormPassword";
+import InputFormCpf from "../inputFormCpf";
+import InputFormPhone from "../inputFormPhone";
+import InputFormDate from "../inputFormDate";
+
+// Utils
+import {
+  checkCPF,
+  isValidEmail,
+  isValidPhone,
+  validateBirthDate,
+} from "@/validators";
 
 // Styles
 import {
@@ -32,8 +44,41 @@ export default function SignUpForm({ stepFinal, setStepFinal }) {
   const [passwordSignUp, setPasswordSignUp] = useState("");
   const [confPasswordSignUp, setConfPasswordSignUp] = useState("");
 
+  const [errorName, setErrorName] = useState(false);
+  const [errorEmail, setErrorEmail] = useState(false);
+  const [errorDocument, setErrorDocument] = useState(false);
+  const [errorPhone, setErrorPhone] = useState(false);
+  const [errorBirthDate, setErrorBirthDate] = useState(false);
+  const [errorIcomeFixed, setErrorIncomeFixed] = useState(false);
+  const [errorPassword, setErrorPassword] = useState(false);
+  const [errorConfPassword, setErrorConfPassword] = useState(false);
+
   const nextStep = () => {
-    setStepFinal(true);
+    const validEmail = isValidEmail(emailSignUp);
+    const validDocument = checkCPF(document);
+    const validPhone = isValidPhone(phone);
+    const validBirthDate = validateBirthDate(birthDate);
+
+    setErrorName(!name);
+    setErrorDocument(!validDocument);
+    setErrorEmail(!validEmail);
+    setErrorPhone(!validPhone);
+    setErrorBirthDate(!validBirthDate);
+
+    if (name && validDocument && validEmail && validPhone && validBirthDate) {
+      setStepFinal(true);
+    }
+  };
+
+  const onPressFinishSignUp = () => {
+    const validPassword = _.isEqual(passwordSignUp, confPasswordSignUp);
+    setErrorIncomeFixed(!incomeFixed);
+    setErrorPassword(!validPassword);
+    setErrorConfPassword(!validPassword);
+
+    if (incomeFixed && validPassword) {
+      console.log("Tudo certo no cadastro.");
+    }
   };
 
   return (
@@ -50,6 +95,7 @@ export default function SignUpForm({ stepFinal, setStepFinal }) {
             placeholder="informe seu nome"
             value={name || ""}
             onChange={(e) => setName(e.target.value)}
+            error={errorName}
           />
           <SpaceVertical />
           <RowInput>
@@ -58,27 +104,31 @@ export default function SignUpForm({ stepFinal, setStepFinal }) {
               placeholder="informe seu e-mail"
               value={emailSignUp || ""}
               onChange={(e) => setEmailSignUp(e.target.value)}
+              error={errorEmail}
             />
-            <InputForm
+            <InputFormCpf
               label="CPF"
               placeholder="informe seu cpf"
               value={document || ""}
               onChange={(e) => setDocument(e.target.value)}
+              error={errorDocument}
             />
           </RowInput>
           <SpaceVertical />
           <RowInput>
-            <InputForm
+            <InputFormPhone
               label="Telefone"
               placeholder="informe seu telefone"
               value={phone || ""}
               onChange={(e) => setPhone(e.target.value)}
+              error={errorPhone}
             />
-            <InputForm
+            <InputFormDate
               label="Data de nascimento"
               placeholder="informe sua data de nascimento"
               value={birthDate || ""}
               onChange={(e) => setBirthDate(e.target.value)}
+              error={errorBirthDate}
             />
           </RowInput>
           <SpaceVertical />
@@ -94,6 +144,7 @@ export default function SignUpForm({ stepFinal, setStepFinal }) {
             placeholder="informe sua renda"
             value={incomeFixed || ""}
             onChange={(e) => setIncomeFixed(e.target.value)}
+            error={errorIcomeFixed}
           />
           <SpaceVertical />
           <InputFormPassword
@@ -101,6 +152,7 @@ export default function SignUpForm({ stepFinal, setStepFinal }) {
             placeholder="crie uma senha"
             value={passwordSignUp || ""}
             onChange={(e) => setPasswordSignUp(e.target.value)}
+            error={errorPassword}
           />
           <SpaceVertical />
           <InputFormPassword
@@ -108,10 +160,13 @@ export default function SignUpForm({ stepFinal, setStepFinal }) {
             placeholder="confirme sua senha"
             value={confPasswordSignUp || ""}
             onChange={(e) => setConfPasswordSignUp(e.target.value)}
+            error={errorConfPassword}
           />
           <SpaceVertical />
 
-          <SignUpButton>Cadastrar</SignUpButton>
+          <SignUpButton onClick={() => onPressFinishSignUp()}>
+            Cadastrar
+          </SignUpButton>
         </Content>
       )}
     </FormWrapper>

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 
 // Libs
 import { useRouter } from "next/navigation";
+import _ from "lodash";
 
 // Components
 import InputFormPassword from "../../components/inputFormPassword";
@@ -23,8 +24,19 @@ export default function ResetPassword() {
   const [password, setPassword] = useState("");
   const [confPassword, setConfPassword] = useState("");
 
+  const [errorPassword, setErrorPassword] = useState(false);
+  const [errorConfPassword, setErrorConfPassword] = useState(false);
+
   const onPressReset = () => {
-    router.push("/login");
+    const validPassword = _.isEqual(password, confPassword);
+
+    setErrorPassword(!validPassword);
+    setErrorConfPassword(!validPassword);
+
+    if (validPassword) {
+      console.log("Tudo certo com a troca de senha");
+      router.push("/login");
+    }
   };
 
   return (
@@ -38,12 +50,14 @@ export default function ResetPassword() {
             placeholder="informe sua senha"
             value={password || ""}
             onChange={(e) => setPassword(e.target.value)}
+            error={errorPassword}
           />
           <InputFormPassword
             label="Confirmação de senha"
             placeholder="Confirme sua senha"
             value={confPassword || ""}
             onChange={(e) => setConfPassword(e.target.value)}
+            error={errorConfPassword}
           />
         </Form>
         <ResetPasswordButton onClick={() => onPressReset()}>
