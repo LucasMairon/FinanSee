@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // Libs
 import { useRouter } from "next/navigation";
@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 // Components
 import InputForm from "../inputForm";
 import InputFormPassword from "../inputFormPassword";
+
+// Context
+import { useAuth } from "@/hooks/context";
 
 // Utils
 import { isValidEmail } from "@/validators";
@@ -25,6 +28,8 @@ import {
 export default function LoginForm() {
   const router = useRouter();
 
+  const { fetchLogin, user } = useAuth();
+
   const [email, setEmail] = useState("");
   const [errorEmail, setErrorEmail] = useState(false);
   const [password, setPassword] = useState("");
@@ -36,9 +41,15 @@ export default function LoginForm() {
     setErrorPassword(!password);
 
     if (validEmail && password) {
-      console.log("Tudo certo no login");
+      fetchLogin(email, password);
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      router.push("/dashboard");
+    }
+  }, [user, router]);
 
   return (
     <FormWrapper>
