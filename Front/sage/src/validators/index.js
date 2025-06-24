@@ -146,3 +146,10 @@ export const formatDate = (date) => {
 
   return splitDate ? `${splitDate[2]}/${splitDate[1]}/${splitDate[0]}` : null;
 };
+
+export const formatDate3 = (date) => {
+  const dateTransformer = transformDate(date);
+  const splitDate = dateTransformer?.split("/");
+
+  return splitDate ? `${splitDate[2]}-${splitDate[1]}-${splitDate[0]}` : null;
+};

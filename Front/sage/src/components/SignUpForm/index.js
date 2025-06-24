@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // Libs
 import { useRouter } from "next/navigation";
 import _ from "lodash";
+
+// Context
+import { useAuth } from "@/hooks/context";
 
 // Components
 import InputForm from "../inputForm";
@@ -10,12 +13,14 @@ import InputFormPassword from "../inputFormPassword";
 import InputFormCpf from "../inputFormCpf";
 import InputFormPhone from "../inputFormPhone";
 import InputFormDate from "../inputFormDate";
+import InputFormMoney from "../inputFormMoney";
 
 // Utils
 import {
   checkCPF,
   isValidEmail,
   isValidPhone,
+  transformDate,
   validateBirthDate,
 } from "@/validators";
 
@@ -34,6 +39,8 @@ import {
 
 export default function SignUpForm({ stepFinal, setStepFinal }) {
   const router = useRouter();
+
+  const { fetchUserCreate, userCreate, cleanState } = useAuth();
 
   const [name, setName] = useState("");
   const [emailSignUp, setEmailSignUp] = useState("");
@@ -72,14 +79,33 @@ export default function SignUpForm({ stepFinal, setStepFinal }) {
 
   const onPressFinishSignUp = () => {
     const validPassword = _.isEqual(passwordSignUp, confPasswordSignUp);
+    console.log(validPassword, "AQUI 3");
     setErrorIncomeFixed(!incomeFixed);
     setErrorPassword(!validPassword);
     setErrorConfPassword(!validPassword);
 
     if (incomeFixed && validPassword) {
-      console.log("Tudo certo no cadastro.");
+      fetchUserCreate(
+        name,
+        document,
+        emailSignUp,
+        birthDate,
+        phone,
+        incomeFixed,
+        passwordSignUp
+      );
     }
   };
+
+  useEffect(() => {
+    return () => cleanState();
+  }, []);
+
+  useEffect(() => {
+    if (userCreate) {
+      router?.push("/login");
+    }
+  }, [userCreate, router]);
 
   return (
     <FormWrapper>
@@ -139,7 +165,7 @@ export default function SignUpForm({ stepFinal, setStepFinal }) {
         </Content>
       ) : (
         <Content>
-          <InputForm
+          <InputFormMoney
             label="Renda Fixa"
             placeholder="informe sua renda"
             value={incomeFixed || ""}
