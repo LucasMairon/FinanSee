@@ -82,7 +82,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
 TIME_ZONE = 'America/Sao_Paulo'
 
@@ -115,6 +115,16 @@ else:
     }
 
 
+EMAIL_BACKEND = config(
+    'EMAIL_BACKEND', default="django.core.mail.backends.console.EmailBackend")
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT', cast=int, default=587)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool, default=True)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
+
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
@@ -134,7 +144,15 @@ SIMPLE_JWT = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'FinanSee API',
-    'DESCRIPTION': 'FinanSee é uma aplicação web desenvolvida para auxiliar no gerenciamento financeiro e orçamentário pessoal. Em um cenário econômico frequentemente incerto, onde a busca por estabilidade financeira é constante, o FinanSee surge como uma solução eficaz e intuitiva. Nosso objetivo é capacitar os usuários a controlar suas finanças de maneira organizada, prática e segura, facilitando o alcance de metas financeiras e promovendo a educação financeira.',
+    'DESCRIPTION': 'FinanSee é uma aplicação web desenvolvida para auxiliar \
+                    no gerenciamento financeiro e orçamentário pessoal. Em um \
+                    cenário econômico frequentemente incerto, onde a busca \
+                    por estabilidade financeira é constante, o FinanSee surge \
+                    como uma solução eficaz e intuitiva. Nosso objetivo é \
+                    capacitar os usuários a controlar suas finanças de \
+                    maneira organizada, prática e segura, facilitando o \
+                    alcance de metas financeiras e promovendo a educação \
+                    financeira.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'CONTACT': {
@@ -146,10 +164,19 @@ SPECTACULAR_SETTINGS = {
 
 
 DJOSER = {
-    'SERIALIZERS': {
-        'user': 'users.api.serializers.UserSerializer',
-        'user_create': 'users.api.serializers.UserCreateSerializer',
-        'current_user': 'users.api.serializers.UserSerializer',
-        'user_delete': 'users.api.serializers.UserSerializer'
-    }
+    'SEND_ACTIVATION_EMAIL': True,
+    'SEND_CONFIRMATION_EMAIL': True,
+    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+    'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
+    'ACTIVATION_URL': 'activate/{uid}/{token}/',
+    'PASSWORD_RESET_CONFIRM_URL': 'reset_password/{uid}/{token}/',
+    'USERNAME_RESET_CONFIRM_URL': 'reset_username/{uid}/{token}/',
+    'LOGOUT_ON_PASSWORD_CHANGE': True,
+    'LOGIN_FIELD': 'email',
+    'EMAIL_FRONTEND_PROTOCOL': config('DJOSER_EMAIL_FRONTEND_PROTOCOL'),
+    'EMAIL_FRONTEND_DOMAIN': config('DJOSER_EMAIL_FRONTEND_DOMAIN'),
+    'EMAIL_FRONTEND_SITE_NAME': config('DJOSER_EMAIL_FRONTEND_SITE_NAME'),
+    'USER_CREATE_PASSWORD_RETYPE': True,
+    'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'USERNAME_RESET_CONFIRM_RETYPE': True,
 }
