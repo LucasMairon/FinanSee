@@ -69,7 +69,7 @@ class UserSerializerTestCase(APITestCase):
         serializer = UserCreateSerializer(instance=user)
         expected_fields = {
             'name', 'email', 'cpf', 'date_of_birth',
-            'phone_number', 'income', 'password'
+            'phone_number', 'income'
         }
         self.assertEqual(set(serializer.data.keys()), expected_fields)
 
