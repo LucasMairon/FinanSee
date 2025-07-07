@@ -12,7 +12,7 @@ name_regex_validator = RegexValidator(
 
 email_regex_validator = RegexValidator(
     regex=r"^[a-zA-Z0-9._]+@[a-z]+\.com$",
-    message="Número de telefone deve estar no formato: 'DDD9XXXXXXXX'"
+    message="O email está em format inválido"
 )
 
 
