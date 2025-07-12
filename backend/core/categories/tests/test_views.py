@@ -1,16 +1,12 @@
 import uuid
 
-from django.urls import reverse
-from django.contrib.auth import get_user_model
-
-from rest_framework.test import APITestCase
-from rest_framework import status
-
-from rest_framework_simplejwt.tokens import RefreshToken
-
-from parameterized import parameterized
-
 from categories.models import Category
+from django.contrib.auth import get_user_model
+from django.urls import reverse
+from parameterized import parameterized
+from rest_framework import status
+from rest_framework.test import APITestCase
+from rest_framework_simplejwt.tokens import RefreshToken
 
 User = get_user_model()
 
@@ -64,17 +60,17 @@ class CategoryViewSetTestCase(APITestCase):
         self.make_categories(self.user, quantity_categories)
         self.authenticate(self.another_user)
         response = self.client.get(reverse(self.category_url))
-        self.assertEqual(len(response.data), 0)
+        self.assertEqual(response.data['count'], 0)
         self.authenticate(self.user)
         response = self.client.get(reverse(self.category_url))
-        self.assertEqual(len(response.data), quantity_categories)
+        self.assertEqual(response.data['count'], quantity_categories)
 
     def test_category_list_returns_categories(self):
         self.authenticate(self.user)
         quantity_categories = 10
         self.make_categories(self.user, quantity_categories)
         response = self.client.get(reverse(self.category_url))
-        self.assertEqual(len(response.data), quantity_categories)
+        self.assertEqual(response.data['count'], quantity_categories)
 
     def test_create_category_is_status_code_201_created(self):
         self.authenticate(self.user)
