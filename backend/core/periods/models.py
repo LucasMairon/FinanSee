@@ -5,6 +5,8 @@ from django.db.models import UniqueConstraint
 from django.db.models.functions import ExtractMonth, ExtractYear
 from django.db.models import F
 
+from decimal import Decimal
+
 from .managers import PeriodManager
 
 User = get_user_model()
@@ -26,7 +28,7 @@ class Period(models.Model):
     user_balance = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        default=0.00,
+        default=Decimal('0.00'),
     )
 
     objects = PeriodManager()
