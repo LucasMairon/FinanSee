@@ -1,9 +1,9 @@
 import re
 from datetime import date
-from django.core.validators import ValidationError
-from dateutil.relativedelta import relativedelta
-from django.core.validators import RegexValidator
 
+from dateutil.relativedelta import relativedelta
+from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 
 name_regex_validator = RegexValidator(
     regex=r'^[a-zá-ùA-ZÁ-Ù]+((?:[\s][a-zá-ùA-ZÁ-Ù]+)?)+$',
@@ -11,7 +11,7 @@ name_regex_validator = RegexValidator(
 )
 
 email_regex_validator = RegexValidator(
-    regex=r"^[a-zA-Z0-9._]+@[a-z]+\.com$",
+    regex=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)',
     message="O email está em format inválido"
 )
 
@@ -40,7 +40,7 @@ def valid_cpf_validator(value):
     """ válida o CPF do usuário com o cálculo do mesmo """
 
     cpf = str(value)
-    cpf = re.sub(r'[^0-9]', '', cpf)
+    cpf = re.sub(r'\D', '', cpf)
 
     if not cpf or len(cpf) != 11:
         raise ValidationError('Digite um cpf valido')
