@@ -21,3 +21,7 @@ class PeriodSerializer(serializers.ModelSerializer):
 
     def get_balance(self, obj):
         return float(obj.user_balance) - float(self.get_monthly_expense(obj))
+
+
+class PeriodPDFSerializer(serializers.Serializer):
+    date = serializers.DateField()
