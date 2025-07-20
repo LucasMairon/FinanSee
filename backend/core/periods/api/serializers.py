@@ -5,15 +5,19 @@ from rest_framework import serializers
 
 class PeriodSerializer(serializers.ModelSerializer):
     expenses = ExpenseSerializer(many=True, read_only=True)
-    gasto_mensal = serializers.SerializerMethodField()
-    saldo = serializers.SerializerMethodField()
+    monthly_expense = serializers.SerializerMethodField()
+    balance = serializers.SerializerMethodField()
 
     class Meta:
         model = Period
-        fields = ('id', 'expenses', 'gasto_mensal', 'saldo', 'user_balance')
+        fields = ('id', 'expenses', 'monthly_expense',
+                  'balance', 'user_balance', 'month')
 
-    def get_gasto_mensal(self, obj):
-        return sum(expense.value for expense in obj.expenses.all())
+    def get_monthly_expense(self, obj):
+        monthly_expense = 0.0
+        for expense in obj.expenses.all():
+            monthly_expense += float(expense.value)
+        return monthly_expense
 
-    def get_saldo(self, obj):
-        return float(obj.user_balance) - float(self.get_gasto_mensal(obj))
+    def get_balance(self, obj):
+        return float(obj.user_balance) - float(self.get_monthly_expense(obj))
