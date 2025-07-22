@@ -11,7 +11,11 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
-    netcat-traditional && \
+    netcat-traditional \
+    libpango-1.0-0 \
+    libharfbuzz0b \
+    libgdk-pixbuf-2.0-0 \
+    libpangoft2-1.0-0 && \
     rm -rf /var/lib/apt/lists/*
 
 RUN pip install --no-cache-dir -r production.txt
@@ -27,5 +31,3 @@ COPY ../entrypoint.sh .
 RUN chmod +x ../entrypoint.sh
 
 ENTRYPOINT ["../entrypoint.sh"]
-
-EXPOSE 8000

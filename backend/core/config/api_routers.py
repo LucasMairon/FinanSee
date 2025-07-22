@@ -1,7 +1,7 @@
 from categories.api.views import CategoryViewSet
 from django.urls import include, path
 from expenses.api.views import ExpenseViewSet
-from periods.api.views import PeriodViewSet
+from periods.api.views import PeriodExportViewSet, PeriodViewSet
 from rest_framework import routers
 from users.api.views import LogoutView
 
@@ -14,7 +14,8 @@ router.register('expenses', ExpenseViewSet, 'expense')
 urlpatterns = [
     path('auth/', include('djoser.urls.jwt')),
     path('auth/', include('djoser.urls')),
-    path('auth/logout/', LogoutView.as_view(), name='logout')
+    path('auth/logout/', LogoutView.as_view(), name='logout'),
+    path('periods/export/', PeriodExportViewSet.as_view(), name='period-export'),
 ]
 
 urlpatterns += router.urls

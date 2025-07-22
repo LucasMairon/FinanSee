@@ -17,6 +17,7 @@ services:
     command: gunicorn --bind 0.0.0.0:8000 --workers 3 config.wsgi
     volumes:
       - .:/app
+      - static_volume:/app/core/staticfiles
     ports:
       - "8000:8000"
     env_file:
@@ -24,5 +25,18 @@ services:
     depends_on:
       - db
 
+  apache:
+    image: httpd:2.4-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - static_volume:/usr/local/apache2/htdocs/static
+      - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./apache/my-vhost.conf:/usr/local/apache2/conf.d/my-vhost.conf
+    depends_on:
+      - web
+
 volumes:
   postgres_data:
+  static_volume:
