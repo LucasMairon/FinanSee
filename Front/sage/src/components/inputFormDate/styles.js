@@ -16,7 +16,6 @@ export const StyledLabel = styled.label`
   padding: 0 6px;
   font-size: 12px;
   color: ${(Props) => (Props.$errorLabelMessage ? "#FF0000" : "#4c4c4c")};
-  font-family: var(--font-roboto);
   font-weight: 400;
   z-index: 1;
 `;
@@ -28,7 +27,6 @@ export const StyledInput = styled.input`
   border: ${(Props) =>
     Props.$errorLabelMessage ? "2px solid #FF0000" : "2px solid #4c4c4c"};
   background-color: transparent;
-  font-family: var(--font-roboto);
   color: #4c4c4c;
   font-weight: 400;
   border-radius: 6px;
@@ -38,7 +36,6 @@ export const StyledInput = styled.input`
   ::placeholder {
     color: #4c4c4c;
     font-size: 12px;
-    font-family: var(--font-roboto);
     font-weight: 400;
   }
 `;

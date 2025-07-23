@@ -19,7 +19,6 @@ const colors = {
 
 export const Container = styled.div`
   display: flex;
-  font-family: "Arial", sans-serif;
   background-color: ${colors.background};
   min-height: 100vh;
 
@@ -44,26 +43,6 @@ export const Sidebar = styled.aside`
     justify-content: space-between;
     padding: 16px;
     flex-wrap: wrap;
-  }
-`;
-
-export const SearchInput = styled.input`
-  width: 100%;
-  padding: 10px 15px;
-  border-radius: 8px;
-  border: none;
-  background-color: rgba(255, 255, 255, 0.2);
-  color: ${colors.white};
-  margin-bottom: 20px;
-  font-size: 0.9rem;
-
-  &::placeholder {
-    color: rgba(255, 255, 255, 0.8);
-  }
-
-  @media (max-width: 768px) {
-    margin-top: 10px;
-    margin-bottom: 10px;
   }
 `;
 

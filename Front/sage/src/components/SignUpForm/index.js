@@ -79,7 +79,6 @@ export default function SignUpForm({ stepFinal, setStepFinal }) {
 
   const onPressFinishSignUp = () => {
     const validPassword = _.isEqual(passwordSignUp, confPasswordSignUp);
-    console.log(validPassword, "AQUI 3");
     setErrorIncomeFixed(!incomeFixed);
     setErrorPassword(!validPassword);
     setErrorConfPassword(!validPassword);

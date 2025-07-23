@@ -153,3 +153,52 @@ export const formatDate3 = (date) => {
 
   return splitDate ? `${splitDate[2]}-${splitDate[1]}-${splitDate[0]}` : null;
 };
+
+export const getInitials = (fullName) => {
+  if (!fullName || typeof fullName !== "string") {
+    return "";
+  }
+
+  const nameParts = fullName.trim().split(" ");
+
+  const filteredNameParts = nameParts.filter((part) => part !== "");
+
+  if (filteredNameParts.length === 0) {
+    return "";
+  }
+
+  const firstNameInitial = filteredNameParts[0][0];
+
+  let lastNameInitial = "";
+  if (filteredNameParts.length > 1) {
+    for (let i = filteredNameParts.length - 1; i >= 1; i--) {
+      const part = filteredNameParts[i].toLowerCase();
+      const irrelevantParts = [
+        "da",
+        "das",
+        "do",
+        "dos",
+        "de",
+        "e",
+        "di",
+        "el",
+        "la",
+        "los",
+      ];
+      if (!irrelevantParts.includes(part)) {
+        lastNameInitial = filteredNameParts[i][0];
+        break;
+      }
+    }
+  }
+
+  if (lastNameInitial === "" && filteredNameParts.length > 1) {
+    lastNameInitial = filteredNameParts[filteredNameParts.length - 1][0];
+  }
+
+  return (firstNameInitial + lastNameInitial).toUpperCase();
+};
+
+export const formatCurrency = (value) => {
+  return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+};
