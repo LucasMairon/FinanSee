@@ -19,7 +19,6 @@ const colors = {
 
 export const Container = styled.div`
   display: flex;
-  font-family: "Arial", sans-serif;
   background-color: ${colors.background};
   min-height: 100vh;
 

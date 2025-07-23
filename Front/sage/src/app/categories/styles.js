@@ -15,8 +15,6 @@ export const PageContainer = styled.div`
   display: flex;
   background-color: ${colors.background};
   min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
 
   /* --- Adição para Responsividade --- */
   @media (max-width: 768px) {

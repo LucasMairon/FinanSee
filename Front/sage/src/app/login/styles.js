@@ -28,19 +28,3 @@ export const RightPanelContent = styled.div`
   align-items: center;
   width: 100%;
 `;
-
-export const Header = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  align-content: flex-start;
-`;
-
-export const ButtonMode = styled.button`
-  background-color: transparent;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-`;

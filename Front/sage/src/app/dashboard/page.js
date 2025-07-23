@@ -15,6 +15,12 @@ import {
 // Components
 import NavBarMenu from "@/components/NavBarMenu";
 
+// Context
+import { useAuth } from "@/hooks/context";
+
+// Validators
+import { formatCurrency } from "@/validators";
+
 // Styles
 import {
   Card,
@@ -29,7 +35,6 @@ import {
   TransactionTable,
 } from "./styles";
 
-// Mock de dados para o gráfico
 const chartData = [
   { name: "Jan", Receita: 4000, Despesa: 2400 },
   { name: "Fev", Receita: 3000, Despesa: 3398 },
@@ -45,7 +50,6 @@ const chartData = [
   { name: "Dez", Receita: 3200, Despesa: 1800 },
 ];
 
-// Mock de dados para as transações
 const transactionsData = [
   {
     name: "Freelancer",
@@ -64,21 +68,29 @@ const transactionsData = [
   { name: "Spotify", date: "Sáb, 19 Abr 2025", value: -19.0, type: "expense" },
 ];
 
-// Função para formatar moeda
-const formatCurrency = (value) => {
-  return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-};
-
 export default function Dashboard() {
+  const { userData } = useAuth();
+
+  const getFirstSecondNameSelector = (name) => {
+    const nameSplit = name?.split(" ");
+    if (nameSplit) {
+      if (nameSplit?.length > 1) {
+        return `${nameSplit[0]}`;
+      }
+
+      return nameSplit[0];
+    }
+
+    return "";
+  };
+
   return (
     <Container>
-      {/* --- BARRA LATERAL --- */}
       <NavBarMenu active={"dashboard"} />
 
-      {/* --- CONTEÚDO PRINCIPAL --- */}
       <MainContent>
         <Header>
-          <h1>Bem vindo, José!</h1>
+          <h1>Bem vindo, {getFirstSecondNameSelector(userData?.name)}!</h1>
           <p>Aqui está um resumo da sua situação financeira atual</p>
         </Header>
 
@@ -125,7 +137,6 @@ export default function Dashboard() {
                 <span>Despesa</span>
               </div>
             </div>
-            {/* Filtro de ano aqui */}
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart
@@ -156,7 +167,6 @@ export default function Dashboard() {
         <TransactionsContainer>
           <div className="transactions-header">
             <h3>Transações Recentes</h3>
-            {/* Botões de pesquisa e filtro aqui */}
           </div>
           <TransactionTable>
             <thead>

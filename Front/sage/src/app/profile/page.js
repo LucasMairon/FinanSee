@@ -2,11 +2,14 @@
 import React from "react";
 
 // Libs
-import Head from "next/head";
 import { FiLock } from "react-icons/fi";
+import { toast } from "react-hot-toast";
 
 // Components
 import NavBarMenu from "@/components/NavBarMenu";
+import { ChangePasswordModal } from "@/app/profile/ChangePasswordModal";
+import { EditProfileModal } from "./EditProfileModal";
+import { DeletAccount } from "@/app/profile/DeletAccount";
 
 // Styles
 import {
@@ -41,8 +44,6 @@ const userData = {
   initials: "JM",
 };
 
-// Componente para renderizar cada item da lista de detalhes
-// Agora ele usa o componente de estilo renomeado 'DetailItemStyled' e não chama a si mesmo.
 const DetailItem = ({ label, value }) => (
   <DetailItemStyled>
     <DetailInfo>
@@ -54,22 +55,42 @@ const DetailItem = ({ label, value }) => (
 );
 
 export default function Profile() {
+  const handleChangePassword = (data) => {
+    console.log("Dados para enviar para a API:", data);
+
+    try {
+      toast.success("Senha alterada com sucesso!");
+    } catch (error) {
+      console.log("Erro ao alterar senha:", error);
+      toast.error("Não foi possível alterar a senha.");
+    }
+  };
+
+  const handleProfileUpdate = async (data) => {
+    console.log("Dados para enviar para a API:", data);
+
+    try {
+      toast.success("Perfil atualizado com sucesso!");
+    } catch (error) {
+      console.log("Erro ao atualizar perfil:", error);
+      toast.error("Não foi possível atualizar o perfil.");
+    }
+  };
+
+  const handleDeleteAccount = () => {
+    console.log("Conta deletada com sucesso!");
+    try {
+      toast.success("Conta deletada com sucesso!");
+    } catch (error) {
+      console.log("Erro ao deletar conta:", error);
+      toast.error("Não foi possível deletar a conta.");
+      return;
+    }
+  };
+
   return (
     <Container>
-      {/* --- BARRA LATERAL --- */}
       <NavBarMenu active={"profile"} />
-
-      {/* --- CONTEÚDO PRINCIPAL --- */}
-      <Head>
-        <title>Meu Perfil</title>
-        {/* As fontes que você comentou foram mantidas assim. */}
-        {/* <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link
-            rel="preconnect"
-            href="https://fonts.gstatic.com"
-            crossOrigin="true"
-          /> */}
-      </Head>
       <MainContent>
         <Header>
           <Title>Meu Perfil</Title>
@@ -85,9 +106,20 @@ export default function Profile() {
             <Greeting>Olá, Bom dia!</Greeting>
           </UserInfo>
           <Actions>
-            <Button>Alterar senha</Button>
-            <Button variant="primary">Editar perfil</Button>
-            <Button variant="danger">Deletar conta</Button>
+            <ChangePasswordModal onSubmit={handleChangePassword}>
+              <Button>Alterar senha</Button>
+            </ChangePasswordModal>
+            <EditProfileModal
+              emailProp={userData.email}
+              phoneProp={userData.phone}
+              moneyProp={userData.monthlyIncome}
+              onSubmit={handleProfileUpdate}
+            >
+              <Button variant="primary">Editar perfil</Button>
+            </EditProfileModal>
+            <DeletAccount onSubmit={handleDeleteAccount}>
+              <Button variant="danger">Deletar conta</Button>
+            </DeletAccount>
           </Actions>
         </ProfileHeader>
 
