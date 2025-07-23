@@ -12,8 +12,7 @@ if not CORS_ALLOW_ALL_ORIGINS:
         cast=lambda v: [s.strip()for s in v.split(',')],
         default=[])
 
-SECRET_KEY = config('SECRET_KEY',
-                    cast=lambda v: [s.strip() for s in v.split(',')])
+SECRET_KEY = config('SECRET_KEY')
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS',
                        cast=lambda v: [s.strip() for s in v.split(',')])
