@@ -61,6 +61,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'context_processors.context_processors.backend_url_context',
             ],
         },
     },
@@ -96,6 +97,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'templates/static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+BACKEND_URL = config('BACKEND_URL')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
