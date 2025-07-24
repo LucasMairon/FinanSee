@@ -11,14 +11,7 @@ skinparam ArrowColor black
 rectangle "Finansee"{
     (Gerenciar Periodo) as gerenciar_periodo
     (Validar Informações) as validar_informacoes
-    (Notificar Despesas) as notificar_depesas
 }
-
-:Sistema: as sistema
-
-sistema -- validar_informacoes
-sistema -- notificar_depesas
-sistema -- gerenciar_periodo
 
 
 @enduml
