@@ -4,7 +4,8 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django_filters.rest_framework import DjangoFilterBackend
 from periods.api.filters import PeriodFilter
-from periods.api.serializers import PeriodPDFSerializer, PeriodSerializer
+from periods.api.serializers import (PeriodDateSerializer,
+                                     PeriodExpenseSerializer, PeriodSerializer)
 from periods.models import Period
 from rest_framework import status
 from rest_framework.decorators import action
@@ -16,11 +17,15 @@ from weasyprint import HTML
 
 
 class PeriodViewSet(ModelViewSet):
-    serializer_class = PeriodSerializer
     permission_classes = [IsAuthenticated]
     http_method_names = ['get',]
     filter_backends = [DjangoFilterBackend]
     filterset_class = PeriodFilter
+
+    def get_serializer_class(self):
+        if self.action == 'evolution':
+            return PeriodExpenseSerializer
+        return PeriodSerializer
 
     def get_queryset(self):
         return Period.objects.filter(user=self.request.user)
@@ -34,21 +39,41 @@ class PeriodViewSet(ModelViewSet):
         period, _ = Period.objects.get_or_create(
             user=request.user,
         )
-        serializer = self.get_serializer(period)
+        serializer = self.get_serializer(instance=period)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['get'], url_path='evolution')
+    def evolution(self, request):
+        """
+        Retrieve the evolution of the expenses for the authenticated user.
+        """
+        if request.query_params.get('year') is None:
+            return Response(
+                {'year':
+                    ['Year is required.']},
+                status=status.HTTP_400_BAD_REQUEST)
+        period = self.filter_queryset(self.get_queryset())
+        if not period.exists():
+            return Response(
+                {'year':
+                    ['There are no period for the specified year.']},
+                status=status.HTTP_404_NOT_FOUND)
+        period = period.first()
+        serializer = self.get_serializer(instance=period)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class PeriodExportViewSet(APIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = PeriodPDFSerializer
+    serializer_class = PeriodDateSerializer
 
     def post(self, request):
         """
         Generate a PDF from the provided HTML content.
         """
-        serializer = PeriodPDFSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        date = serializer.validated_data['date']
+        date = serializer.validated_data['period_date']
 
         period = Period.objects.filter(user=request.user,
                                        month__month=date.month,
