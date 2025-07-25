@@ -32,6 +32,7 @@ THIRD_PARTY_APPS = [
     'drf_spectacular',
     'rest_framework',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
@@ -178,7 +179,7 @@ DJOSER = {
     'ACTIVATION_URL': 'activate/{uid}/{token}/',
     'PASSWORD_RESET_CONFIRM_URL': 'reset_password/{uid}/{token}/',
     'USERNAME_RESET_CONFIRM_URL': 'reset_username/{uid}/{token}/',
-    'LOGOUT_ON_PASSWORD_CHANGE': True,
+    'LOGOUT_ON_PASSWORD_CHANGE': False,
     'LOGIN_FIELD': 'email',
     'EMAIL_FRONTEND_PROTOCOL': config('DJOSER_EMAIL_FRONTEND_PROTOCOL'),
     'EMAIL_FRONTEND_DOMAIN': config('DJOSER_EMAIL_FRONTEND_DOMAIN'),
