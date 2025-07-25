@@ -1,4 +1,5 @@
 import uuid
+from calendar import monthrange
 from datetime import date
 from decimal import Decimal
 
@@ -6,6 +7,7 @@ from categories.models import Category
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from expenses.models import Expense
+from parameterized import parameterized
 from periods.models import Period
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -33,10 +35,17 @@ class PeriodSerializerTestCase(APITestCase):
             'status': Expense.STATUS_CHOICES[0][0],
         }
 
+    def sum_expenses(self, expenses, start_date, end_date):
+        total = 0.0
+        for expense in expenses:
+            if expense.date >= start_date and expense.date <= end_date:
+                total += float(expense.value)
+        return total
+
     def make_expenses(self, user, quantity=5, month=date.today()):
         expenses = []
-        period = Period.objects.create(
-            user=user, month=month, user_balance=user.income)
+        period, _ = Period.objects.get_or_create(
+            user=user, month=month)
         for i in range(quantity):
             expense = Expense.objects.create(
                 name=f'Expense Name {i}',
@@ -114,8 +123,8 @@ class PeriodSerializerTestCase(APITestCase):
     def test_retrieve_period_fields_is_expected(self):
         self.authenticate(self.user)
         period = Period.objects.get_or_create(user=self.user)[0]
-        expected_fields = {'id', 'expenses', 'gasto_mensal',
-                           'saldo', 'user_balance'}
+        expected_fields = {'id', 'expenses', 'monthly_expense',
+                           'balance', 'user_balance', 'month'}
         response = self.client.get(
             reverse(self.period_detail_url, kwargs={'pk': period.id}))
         self.assertEqual(set(response.data.keys()), expected_fields)
@@ -139,3 +148,78 @@ class PeriodSerializerTestCase(APITestCase):
         period = Period.objects.get_or_create(
             user=self.user, month=date.today())[0]
         self.assertEqual(response.data['id'], str(period.id))
+
+    def test_evolution_with_year_is_status_code_200_ok(self):
+        self.authenticate(self.user)
+        Period.objects.get_or_create(user=self.user, month=date.today())
+        response = self.client.get(
+            reverse('period-evolution') + f'?year={date.today().year}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_evolution_without_authentication_is_status_code_401_unauthorized(self):
+        response = self.client.get(reverse('period-evolution'))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_evolution_with_invalid_year_is_status_code_404_not_found(self):
+        self.authenticate(self.user)
+        Period.objects.get_or_create(user=self.user, month=date(2024, 1, 1))
+        response = self.client.get(reverse('period-evolution') + '?year=224')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_evolution_with_year_is_correct_but_period_not_exist_is_status_code_404_not_found(self):
+        self.authenticate(self.user)
+        response = self.client.get(
+            reverse('period-evolution') + f'?year={date.today().year}')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    @parameterized.expand([
+        (date(2025, 2, 25),),
+        (date(2024, 2, 25),),
+        (date(2025, 6, 25),),
+        (date(2025, 7, 25),),
+    ])
+    def test_evolution_is_correct_data(self, month_date):
+        self.authenticate(self.user)
+        last_day = monthrange(month_date.year, month_date.month)[1]
+        expenses = []
+        for i in range(1, last_day):
+            expenses.append(
+                self.make_expenses(
+                    user=self.user,
+                    month=date(month_date.year, month_date.month, i),
+                    quantity=1
+                )[0]
+            )
+        end_day = 22
+        step = 5
+        displacement = 4
+        expected_daily_evolution_in_the_last_days = {
+            'start_date': date(
+                month_date.year, month_date.month, end_day + displacement),
+            'end_date': date(month_date.year, month_date.month, last_day),
+            'total_expense': self.sum_expenses(
+                expenses,
+                date(month_date.year,
+                     month_date.month, end_day + displacement),
+                date(month_date.year, month_date.month, last_day))
+        }
+        expected_daily_evolution = []
+        for i in range(1, end_day, step):
+            expected_daily_evolution.append(
+                {
+                    'start_date': date(month_date.year, month_date.month, i),
+                    'end_date': date(
+                        month_date.year, month_date.month, i + displacement),
+                    'total_expense': self.sum_expenses(
+                        expenses,
+                        date(month_date.year, month_date.month, i),
+                        date(month_date.year,
+                             month_date.month, i + displacement))
+                }
+            )
+        expected_daily_evolution.append(
+            expected_daily_evolution_in_the_last_days)
+        response = self.client.get(
+            reverse('period-evolution') + f'?year={month_date.year}')
+        self.assertEqual(
+            response.data['daily_evolution'], expected_daily_evolution)
