@@ -23,14 +23,14 @@ class PeriodViewSet(ModelViewSet):
     filterset_class = PeriodFilter
 
     def get_serializer_class(self):
-        if self.action == 'evolution':
+        if self.action == 'daily_evolution':
             return PeriodExpenseSerializer
         return PeriodSerializer
 
     def get_queryset(self):
         return Period.objects.filter(user=self.request.user)
 
-    @action(detail=False, methods=['get'], url_path='current')
+    @action(detail=False, methods=['get'])
     def current_period(self, request):
         """
         Retrieve the current period for the authenticated user.
@@ -42,23 +42,12 @@ class PeriodViewSet(ModelViewSet):
         serializer = self.get_serializer(instance=period)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @action(detail=False, methods=['get'], url_path='evolution')
-    def evolution(self, request):
+    @action(detail=False, methods=['get'])
+    def daily_evolution(self, request):
         """
-        Retrieve the evolution of the expenses for the authenticated user.
+        Retrieve the daily_evolution of the expenses for the authenticated user.
         """
-        if request.query_params.get('year') is None:
-            return Response(
-                {'year':
-                    ['Year is required.']},
-                status=status.HTTP_400_BAD_REQUEST)
-        period = self.filter_queryset(self.get_queryset())
-        if not period.exists():
-            return Response(
-                {'year':
-                    ['There are no period for the specified year.']},
-                status=status.HTTP_404_NOT_FOUND)
-        period = period.first()
+        period, _ = Period.objects.get_or_create(user=request.user)
         serializer = self.get_serializer(instance=period)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
