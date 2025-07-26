@@ -22,6 +22,7 @@ class PeriodSerializerTestCase(APITestCase):
         self.period_url = 'period-list'
         self.period_detail_url = 'period-detail'
         self.period_action_current_period_url = 'period-current-period'
+        self.period_action_daily_evolution_url = 'period-daily-evolution'
         self.user = User.objects.create_user(email='test@test.com',
                                              password='testpassword')
         self.another_user = User.objects.create_user(
@@ -149,37 +150,21 @@ class PeriodSerializerTestCase(APITestCase):
             user=self.user, month=date.today())[0]
         self.assertEqual(response.data['id'], str(period.id))
 
-    def test_evolution_with_year_is_status_code_200_ok(self):
+    def test_daily_evolution_is_status_code_200_ok(self):
         self.authenticate(self.user)
         Period.objects.get_or_create(user=self.user, month=date.today())
         response = self.client.get(
-            reverse('period-evolution') + f'?year={date.today().year}')
+            reverse(self.period_action_daily_evolution_url))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_evolution_without_authentication_is_status_code_401_unauthorized(self):
-        response = self.client.get(reverse('period-evolution'))
+    def test_daily_evolution_without_authentication_is_status_code_401_unauthorized(self):
+        response = self.client.get(
+            reverse(self.period_action_daily_evolution_url))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_evolution_with_invalid_year_is_status_code_404_not_found(self):
+    def test_daily_evolution_is_correct_data(self):
         self.authenticate(self.user)
-        Period.objects.get_or_create(user=self.user, month=date(2024, 1, 1))
-        response = self.client.get(reverse('period-evolution') + '?year=224')
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    def test_evolution_with_year_is_correct_but_period_not_exist_is_status_code_404_not_found(self):
-        self.authenticate(self.user)
-        response = self.client.get(
-            reverse('period-evolution') + f'?year={date.today().year}')
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    @parameterized.expand([
-        (date(2025, 2, 25),),
-        (date(2024, 2, 25),),
-        (date(2025, 6, 25),),
-        (date(2025, 7, 25),),
-    ])
-    def test_evolution_is_correct_data(self, month_date):
-        self.authenticate(self.user)
+        month_date = date.today()
         last_day = monthrange(month_date.year, month_date.month)[1]
         expenses = []
         for i in range(1, last_day):
@@ -220,6 +205,6 @@ class PeriodSerializerTestCase(APITestCase):
         expected_daily_evolution.append(
             expected_daily_evolution_in_the_last_days)
         response = self.client.get(
-            reverse('period-evolution') + f'?year={month_date.year}')
+            reverse(self.period_action_daily_evolution_url))
         self.assertEqual(
             response.data['daily_evolution'], expected_daily_evolution)
