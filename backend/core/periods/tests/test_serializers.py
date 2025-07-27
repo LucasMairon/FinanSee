@@ -78,8 +78,8 @@ class PeriodSerializerTest(PeriodSerializerTestMixin, APITestCase):
         serializer = PeriodSerializer(period)
         self.assertEqual({e['id'] for e in serializer.data['expenses']},
                          {str(expense.id) for expense in expenses})
-        self.assertEqual(str(serializer.data['user_balance']),
-                         str(self.user.income))
+        self.assertEqual(serializer.data['user_balance'],
+                         self.user.income)
         self.assertEqual(
             serializer.data['monthly_expense'], monthly_expense)
         self.assertEqual(str(serializer.data['month']), str(period.month))
@@ -94,7 +94,7 @@ class PeriodExpenseSerializerTest(PeriodSerializerTestMixin, APITestCase):
             user=self.user, month=period.month, quantity=10)
         monthly_expense = period.expenses.aggregate(
             total=Sum('value'))['total'] or 0.0
-        daily_average = monthly_expense / date.today().day
+        daily_average = float(monthly_expense / date.today().day)
         category_that_appears_most = self.make_categories(self.user, 1)[0]
         for expense in expenses:
             expense.categories.add(category_that_appears_most)
