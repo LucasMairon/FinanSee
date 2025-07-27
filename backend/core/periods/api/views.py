@@ -5,7 +5,9 @@ from django.template.loader import render_to_string
 from django_filters.rest_framework import DjangoFilterBackend
 from periods.api.filters import PeriodFilter
 from periods.api.serializers import (PeriodDateSerializer,
-                                     PeriodExpenseSerializer, PeriodSerializer)
+                                     PeriodExpenseSerializer,
+                                     PeriodFinancialEvolutionSerializer,
+                                     PeriodSerializer)
 from periods.models import Period
 from rest_framework import status
 from rest_framework.decorators import action
@@ -25,6 +27,8 @@ class PeriodViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'daily_evolution':
             return PeriodExpenseSerializer
+        if self.action == 'financial_evolution':
+            return PeriodFinancialEvolutionSerializer
         return PeriodSerializer
 
     def get_queryset(self):
@@ -45,10 +49,21 @@ class PeriodViewSet(ModelViewSet):
     @action(detail=False, methods=['get'])
     def daily_evolution(self, request):
         """
-        Retrieve the daily_evolution of the expenses for the authenticated user.
+        Retrieve the daily_evolution of the expenses for the authenticated
+        user.
         """
         period, _ = Period.objects.get_or_create(user=request.user)
         serializer = self.get_serializer(instance=period)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['get'])
+    def financial_evolution(self, request):
+        """
+        Retrieve the financial evolution of the expenses for the authenticated
+        user.
+        """
+        period, _ = Period.objects.get_or_create(user=request.user)
+        serializer = PeriodFinancialEvolutionSerializer(instance=period)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -86,5 +101,7 @@ class PeriodExportViewSet(APIView):
             return Response({'error': 'Failed to generate PDF'},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         response = HttpResponse(pdf_file, content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="{filename}.pdf"'
+        response['Content-Disposition'] = (
+            f'attachment; filename="{filename}.pdf"'
+        )
         return response
