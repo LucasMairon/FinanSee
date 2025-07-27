@@ -7,7 +7,7 @@ from categories.models import Category
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from expenses.models import Expense
-from parameterized import parameterized
+from freezegun import freeze_time
 from periods.models import Period
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -23,6 +23,7 @@ class PeriodSerializerTestCase(APITestCase):
         self.period_detail_url = 'period-detail'
         self.period_action_current_period_url = 'period-current-period'
         self.period_action_daily_evolution_url = 'period-daily-evolution'
+        self.period_action_financial_evolution_url = 'period-financial-evolution'
         self.user = User.objects.create_user(email='test@test.com',
                                              password='testpassword')
         self.another_user = User.objects.create_user(
@@ -208,3 +209,35 @@ class PeriodSerializerTestCase(APITestCase):
             reverse(self.period_action_daily_evolution_url))
         self.assertEqual(
             response.data['daily_evolution'], expected_daily_evolution)
+
+    def test_financial_evolution_is_status_code_200_ok(self):
+        self.authenticate(self.user)
+        response = self.client.get(
+            reverse(self.period_action_financial_evolution_url))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_financial_evolution_without_authentication_is_status_code_401_unauthorized(self):
+        response = self.client.get(
+            reverse(self.period_action_financial_evolution_url))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    @freeze_time('2025-07-01')
+    def test_financial_evolution_is_correct_data(self):
+        self.authenticate(self.user)
+        current_period, _ = Period.objects.get_or_create(user=self.user)
+        expected_months = ['Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out']
+        for i in range(1, 13):
+            self.make_expenses(
+                user=self.user,
+                month=date(current_period.month.year, i, 1),
+                quantity=i)
+        response = self.client.get(
+            reverse(self.period_action_financial_evolution_url))
+        actual_evolution = response.data['financial_evolution']
+        actual_months = [item['month_abbreviation']
+                         for item in actual_evolution]
+        self.assertEqual(actual_months, expected_months)
+        for item in actual_evolution:
+            self.assertIn(item['date'].year, [current_period.month.year - 1,
+                                              current_period.month.year,
+                                              current_period.month.year + 1])
