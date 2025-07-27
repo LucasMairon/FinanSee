@@ -13,10 +13,29 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [userCreate, setUserCreate] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const getUser = () => {
+    setLoading(true);
+    api
+      .get("auth/users/me/")
+      .then((resp) => {
+        setUserData(resp.data);
+      })
+      .catch((error) => {
+        console.log(
+          "Get user error:",
+          error.response || error.message || error
+        );
+      })
+      .finally(() => setLoading(false));
+  };
+
   const fetchLogin = (email, password) => {
+    localStorage.setItem("token", null);
+    localStorage.setItem("tokenReflesh", null);
     setLoading(true);
 
     const data = {
@@ -30,6 +49,7 @@ export const AuthProvider = ({ children }) => {
         setUser(resp.data);
         localStorage.setItem("token", resp.data.access);
         localStorage.setItem("tokenReflesh", resp.data.refresh);
+        getUser();
       })
       .catch((error) => {
         console.log("Login error:", error.response || error.message || error);
@@ -94,6 +114,7 @@ export const AuthProvider = ({ children }) => {
         fetchUserCreate,
         userCreate,
         cleanState,
+        userData,
       }}
     >
       {children}

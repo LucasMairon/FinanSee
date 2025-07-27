@@ -1,25 +1,19 @@
-"use client";
 import styled, { css } from "styled-components";
 
-// --- ESTILOS DO LAYOUT DA PÁGINA ---
-export const PageWrapper = styled.div`
-  display: flex;
-  background-color: #f9fafb; /* Cor de fundo para toda a área visível */
-  min-height: 100vh;
-`;
+const colors = {
+  background: "#f9fafb",
+  textPrimary: "#111827",
+  textSecondary: "#374151",
+  textMuted: "#6b7280",
+  textLight: "#9ca3af",
+  border: "#e5e7eb",
+  borderLight: "#d1d5db",
+  white: "#ffffff",
+  primary: "#34b361",
+  primaryHover: "#059669",
+  blueFocus: "#bfdbfe",
+};
 
-// Container principal para o conteúdo da página (à direita do menu)
-// O nome foi mantido como 'Container' para corresponder à sua importação.
-export const Container = styled.main`
-  flex-grow: 1; /* Garante que o conteúdo ocupe o espaço restante */
-  padding: 2rem;
-  font-family: "Inter", sans-serif;
-  color: #374151; /* gray-700 */
-`;
-
-// --- ESTILOS DO CONTEÚDO DA PÁGINA DE DESPESAS ---
-
-// Mapeamento de cores para as categorias
 const categoryColors = {
   Lazer: "#E0F2FE",
   Outros: "#F3E8FF",
@@ -30,7 +24,6 @@ const categoryColors = {
   Educação: "#FEE2E2",
   default: "#F3F4F6",
 };
-
 const categoryTextColors = {
   Lazer: "#0284C7",
   Outros: "#9333EA",
@@ -42,82 +35,124 @@ const categoryTextColors = {
   default: "#4B5563",
 };
 
-// Cabeçalho com Título e Botões de Ação
+export const PageWrapper = styled.div`
+  display: flex;
+  background-color: ${colors.background};
+  min-height: 100vh;
+  font-family: "Inter", sans-serif;
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
+`;
+
+export const Container = styled.main`
+  flex-grow: 1;
+  padding: 2rem;
+  color: ${colors.textSecondary};
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+`;
+
 export const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 export const Title = styled.h1`
   font-size: 2rem;
   font-weight: 700;
-  color: #111827;
+  color: ${colors.textPrimary};
   margin: 0;
+
+  @media (max-width: 768px) {
+    font-size: 1.75rem;
+  }
 `;
 
 export const Subtitle = styled.p`
   font-size: 0.9rem;
-  color: #6b7280;
+  color: ${colors.textMuted};
   margin-top: 0.25rem;
 `;
 
 export const Actions = styled.div`
   display: flex;
   gap: 1rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    width: 100%;
+  }
 `;
 
-// Botões
 export const Button = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
+  background-color: ${colors.primary};
+  color: ${colors.white};
+  border: none;
+  white-space: nowrap;
 
-  ${(props) =>
-    props.primary
-      ? css`
-          background-color: #34b361;
-          color: white;
-          border: none;
-          &:hover {
-            background-color: #059669;
-          }
-        `
-      : css`
-          background-color: white;
-          color: #374151;
-          border: 1px solid #d1d5db;
-          &:hover {
-            background-color: #f9fafb;
-          }
-        `}
+  &:hover {
+    background-color: ${colors.primaryHover};
+  }
 `;
 
-// Container para os cartões de resumo
+export const ButtonDownload = styled(Button)`
+  background-color: ${colors.white};
+  color: ${colors.textSecondary};
+  border: 1px solid ${colors.borderLight};
+  padding: 0.65rem;
+
+  &:hover {
+    background-color: ${colors.background};
+  }
+`;
+
 export const SummaryContainer = styled.section`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 `;
 
-// Estilo para cada cartão individual
 export const Card = styled.div`
-  background-color: white;
+  background-color: ${colors.white};
   padding: 1.5rem;
   border-radius: 0.75rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid ${colors.border};
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 `;
 
 export const CardTitle = styled.h3`
   font-size: 0.8rem;
   font-weight: 600;
-  color: #6b7280;
+  color: ${colors.textMuted};
   margin: 0 0 0.5rem 0;
   text-transform: uppercase;
   display: flex;
@@ -128,29 +163,36 @@ export const CardTitle = styled.h3`
 export const CardValue = styled.p`
   font-size: 1.8rem;
   font-weight: 700;
-  color: #111827;
+  color: ${colors.textPrimary};
   margin: 0 0 0.5rem 0;
+
+  @media (max-width: 768px) {
+    font-size: 1.6rem;
+  }
 `;
 
 export const CardFooter = styled.p`
   font-size: 0.8rem;
-  color: #9ca3af;
+  color: ${colors.textLight};
   margin: 0;
 `;
 
 export const CardTrendUp = styled.span`
-  color: #34b361;
+  color: ${colors.primary};
   font-size: 0.75rem;
 `;
 
-// Container genérico para as seções de Gráfico e Tabela
 export const SectionContainer = styled.section`
-  background-color: white;
+  background-color: ${colors.white};
   padding: 1.5rem;
   border-radius: 0.75rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid ${colors.border};
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 `;
 
 export const SectionHeader = styled.div`
@@ -158,12 +200,19 @@ export const SectionHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 export const SectionTitle = styled.h2`
   font-size: 1.1rem;
   font-weight: 700;
-  color: #111827;
+  color: ${colors.textPrimary};
   margin: 0;
 `;
 
@@ -171,45 +220,46 @@ export const FilterActions = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    width: 100%;
+    align-items: stretch;
+  }
 `;
 
-// Estilos para inputs e selects
 export const Input = styled.input`
   padding: 0.6rem 1rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid ${colors.borderLight};
   border-radius: 0.5rem;
-  background-color: white;
+  background-color: ${colors.white};
   font-size: 0.9rem;
   color: #282828;
   &:focus {
     outline: none;
-    border-color: #34b361;
-    box-shadow: 0 0 0 2px #bfdbfe;
+    border-color: ${colors.primary};
+    box-shadow: 0 0 0 2px ${colors.blueFocus};
   }
 `;
 
 export const Select = styled.select`
   padding: 0.6rem 1rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid ${colors.borderLight};
   border-radius: 0.5rem;
-  background-color: white;
+  background-color: ${colors.white};
   font-size: 0.9rem;
   color: #282828;
   cursor: pointer;
   &:focus {
     outline: none;
-    border-color: #34b361;
-  }
-
-  option {
-    color: #282828;
+    border-color: ${colors.primary};
   }
 `;
 
-// Estilos para o gráfico
 export const ChartWrapper = styled.div`
   width: 100%;
-  height: 200px;
+  height: 250px;
 `;
 
 export const Legend = styled.div`
@@ -217,17 +267,16 @@ export const Legend = styled.div`
   align-items: center;
   gap: 0.5rem;
   font-size: 0.9rem;
-  color: #6b7280;
+  color: ${colors.textMuted};
 `;
 
 export const LegendColorBox = styled.div`
   width: 12px;
   height: 12px;
   background-color: #ff4f4f;
-  border-radius: 6px;
+  border-radius: 2px;
 `;
 
-// Estilos para a tabela
 export const TableWrapper = styled.div`
   width: 100%;
   overflow-x: auto;
@@ -241,33 +290,76 @@ export const Table = styled.table`
   th,
   td {
     padding: 1rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid ${colors.border};
     vertical-align: middle;
   }
 
   th {
     font-size: 0.8rem;
     font-weight: 600;
-    color: #6b7280;
+    color: ${colors.textMuted};
     text-transform: uppercase;
   }
 
   td {
     font-size: 0.9rem;
-    color: #374151;
+    color: ${colors.textSecondary};
   }
 
   tbody tr:hover {
-    background-color: #f9fafb;
+    background-color: ${colors.background};
+  }
+
+  @media (max-width: 768px) {
+    thead {
+      display: none;
+    }
+
+    table,
+    tbody,
+    tr,
+    td {
+      display: block;
+      width: 100%;
+    }
+
+    tr {
+      margin-bottom: 1rem;
+      border: 1px solid ${colors.border};
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0.5rem;
+      text-align: right;
+      border-bottom: 1px solid ${colors.background};
+    }
+
+    tr td:last-child {
+      border-bottom: none;
+    }
+
+    td::before {
+      content: attr(data-label);
+      font-weight: 600;
+      color: ${colors.textMuted};
+      text-align: left;
+      padding-right: 1rem;
+    }
   }
 `;
 
-// Badge de Status (Pago, A pagar)
 export const StatusBadge = styled.span`
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
   font-weight: 500;
   font-size: 0.8rem;
+  white-space: nowrap;
 
   ${({ status }) =>
     status === "Pago" &&
@@ -275,7 +367,6 @@ export const StatusBadge = styled.span`
       background-color: #d1fae5;
       color: #065f46;
     `}
-
   ${({ status }) =>
     status === "A pagar" &&
     css`
@@ -284,14 +375,13 @@ export const StatusBadge = styled.span`
     `}
 `;
 
-// Tag de Categoria
 export const CategoryTag = styled.span`
   padding: 0.25rem 0.75rem;
   border-radius: 6px;
   font-weight: 500;
   font-size: 0.8rem;
   background-color: ${({ category }) =>
-    categoryColors[category] || categoryColors["default"]};
+    categoryColors[category] || categoryColors.default};
   color: ${({ category }) =>
-    categoryTextColors[category] || categoryTextColors["default"]};
+    categoryTextColors[category] || categoryTextColors.default};
 `;

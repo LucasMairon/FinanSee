@@ -4,10 +4,21 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
+// Components
+import { ExitApp } from "./ExitApp";
+
+// Context
+import { useAuth } from "@/hooks/context";
+
+// Validators
+import { getInitials } from "@/validators";
+
 // Styles
-import { NavItem, NavMenu, SearchInput, Sidebar, UserProfile } from "./styles";
+import { NavItem, NavMenu, Sidebar, UserProfile } from "./styles";
 
 const NavBarMenu = ({ active }) => {
+  const { userData } = useAuth();
+
   const ActiveMenu = (refActive) => {
     if (active === refActive) {
       return "active";
@@ -18,7 +29,6 @@ const NavBarMenu = ({ active }) => {
   return (
     <Sidebar>
       <Image src="/Logo.svg" alt="Logo" width={200} height={100} />
-      <SearchInput placeholder="Procurar..." />
 
       <NavMenu>
         <Link href="/dashboard">
@@ -45,22 +55,18 @@ const NavBarMenu = ({ active }) => {
             <span>Categorias</span>
           </NavItem>
         </Link>
-        <Link href="/relatorio">
-          <NavItem className={ActiveMenu("relatorio")}>
-            <Image src="/Analytics.svg" alt="Logo" width={24} height={24} />{" "}
-            <span>Relatório</span>
-          </NavItem>
-        </Link>
       </NavMenu>
 
       <UserProfile>
-        <div className="avatar">JM</div>
+        <div className="avatar">{getInitials(userData?.name)}</div>
         <div className="userInfo">
-          <strong>José Maria</strong>
+          <strong>{userData?.name}</strong>
         </div>
-        <div className="logoutIcon">
-          <Image src="/Exit.svg" alt="Logo" width={24} height={24} />{" "}
-        </div>
+        <ExitApp>
+          <div className="logoutIcon">
+            <Image src="/Exit.svg" alt="Logo" width={24} height={24} />{" "}
+          </div>
+        </ExitApp>
       </UserProfile>
     </Sidebar>
   );

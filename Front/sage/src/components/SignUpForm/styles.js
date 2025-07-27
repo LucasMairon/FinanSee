@@ -23,7 +23,6 @@ export const Content = styled.div``;
 
 export const SignIn = styled.span`
   font-size: 1.8rem;
-  font-family: var(--font-roboto);
   font-weight: 600;
   color: #787878;
   border-bottom: none;
@@ -32,7 +31,6 @@ export const SignIn = styled.span`
 
 export const SignUp = styled.span`
   font-size: 1.8rem;
-  font-family: var(--font-roboto);
   font-weight: 600;
   color: ${backgroundDark};
   border-bottom: 2px solid #24b36b;
@@ -44,7 +42,6 @@ export const SignUpButton = styled.button`
   padding: 0.8rem;
   border: none;
   border-radius: 20px;
-  font-family: var(--font-roboto);
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;

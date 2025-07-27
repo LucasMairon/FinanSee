@@ -30,9 +30,9 @@ export default function LoginForm() {
 
   const { fetchLogin, user } = useAuth();
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("xapab61445@pacfut.com");
   const [errorEmail, setErrorEmail] = useState(false);
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("Teste123@");
   const [errorPassword, setErrorPassword] = useState(false);
 
   const onPressLogin = () => {
@@ -43,6 +43,7 @@ export default function LoginForm() {
     if (validEmail && password) {
       fetchLogin(email, password);
     }
+    // router.push("/dashboard");
   };
 
   useEffect(() => {

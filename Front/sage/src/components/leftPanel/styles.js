@@ -24,7 +24,6 @@ export const Row = styled.div`
 
 export const Tagline = styled.div`
   margin-right: -5rem;
-  font-family: var(--font-roboto);
   font-weight: 600;
 
   h2 {

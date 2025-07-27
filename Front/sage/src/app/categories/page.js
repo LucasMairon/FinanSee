@@ -1,10 +1,13 @@
 "use client";
-
 import React from "react";
-import Image from "next/image";
 
-// Supondo que o NavBarMenu esteja em /components/NavBarMenu
+// Libs
+import { toast } from "react-hot-toast";
+
+// Components
 import NavBarMenu from "@/components/NavBarMenu";
+import { CategoryModal } from "@/app/categories/CategoriesModal";
+import { DeletCateroryModal } from "@/app/categories/DeletCateroryModal";
 
 // Importando os componentes estilizados
 import {
@@ -50,7 +53,7 @@ const EditIcon = () => (
     height="20"
     viewBox="0 0 24 24"
     fill="none"
-    stroke="currentColor"
+    stroke="#000000"
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
@@ -66,7 +69,7 @@ const DeleteIcon = () => (
     height="20"
     viewBox="0 0 24 24"
     fill="none"
-    stroke="currentColor"
+    stroke="#E41414"
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
@@ -88,6 +91,23 @@ const CategoriesPage = () => {
   categoriesData[7].description = categoriesData[0].description;
   categoriesData[8].description = categoriesData[0].description;
 
+  const handleChangeCategory = (data) => {
+    try {
+      console.log("CRIANDO categoria:", data);
+
+      if (data?.type === "create") {
+        toast.success("Categoria criada com sucesso!");
+      }
+      if (data?.type === "edit") {
+        toast.success("Categoria editada com sucesso!");
+      }
+    } catch (error) {
+      console.log("Erro ao criar categoria:", error);
+      toast.error("Erro ao criar categoria. Tente novamente.");
+      return;
+    }
+  };
+
   return (
     <PageContainer>
       <NavBarMenu active="categories" />
@@ -100,7 +120,9 @@ const CategoriesPage = () => {
           </HeaderInfo>
           <HeaderActions>
             <SearchInput placeholder="Pesquisar categoria..." />
-            <NewCategoryButton>+ Nova Categoria</NewCategoryButton>
+            <CategoryModal type={"create"} onSubmit={handleChangeCategory}>
+              <NewCategoryButton>+ Nova Categoria</NewCategoryButton>
+            </CategoryModal>
           </HeaderActions>
         </Header>
 
@@ -108,12 +130,21 @@ const CategoriesPage = () => {
           {categoriesData.map((category, index) => (
             <CategoryCard key={index}>
               <CardActions>
-                <IconButton aria-label="Editar categoria">
-                  <EditIcon />
-                </IconButton>
-                <IconButton aria-label="Excluir categoria">
-                  <DeleteIcon />
-                </IconButton>
+                <CategoryModal
+                  type={"edit"}
+                  nameProp={category.title}
+                  descriptionProp={category.description}
+                  onSubmit={handleChangeCategory}
+                >
+                  <IconButton>
+                    <EditIcon />
+                  </IconButton>
+                </CategoryModal>
+                <DeletCateroryModal>
+                  <IconButton>
+                    <DeleteIcon />
+                  </IconButton>
+                </DeletCateroryModal>
               </CardActions>
               <CardHeader>Categoria</CardHeader>
               <CardTitle>{category.title}</CardTitle>

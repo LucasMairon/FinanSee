@@ -21,7 +21,6 @@ export const Header = styled.div`
 
 export const SignIn = styled.span`
   font-size: 1.8rem;
-  font-family: var(--font-roboto);
   font-weight: 600;
   color: ${backgroundDark};
   border-bottom: 2px solid #24b36b;
@@ -29,7 +28,6 @@ export const SignIn = styled.span`
 
 export const SignUp = styled.span`
   font-size: 1.8rem;
-  font-family: var(--font-roboto);
   font-weight: 600;
   color: #787878;
   border-bottom: none;
@@ -40,7 +38,6 @@ export const ForgotPassword = styled.a`
   color: #24b36b;
   font-size: 0.85rem;
   text-decoration: underline;
-  font-family: var(--font-roboto);
   font-weight: 400;
   margin-top: -0.5rem;
   margin-bottom: 2rem;
@@ -53,7 +50,6 @@ export const LoginButton = styled.button`
   padding: 0.8rem;
   border: none;
   border-radius: 20px;
-  font-family: var(--font-roboto);
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;

@@ -27,7 +27,6 @@ export const Content = styled.div`
 export const Title = styled.a`
   color: ${backgroundDark};
   font-size: 25px;
-  font-family: var(--font-roboto);
   font-weight: 600;
   text-align: center;
 `;
@@ -35,7 +34,6 @@ export const Title = styled.a`
 export const SubTitle = styled.b`
   color: #696969;
   font-size: 20px;
-  font-family: var(--font-roboto);
   font-weight: 400;
   text-align: center;
 `;
@@ -53,7 +51,6 @@ export const ResetPasswordButton = styled.button`
   padding: 0.8rem;
   border: none;
   border-radius: 20px;
-  font-family: var(--font-roboto);
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
