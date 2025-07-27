@@ -6,9 +6,12 @@ from categories.api.serializers import CategorySerializer
 from categories.models import Category
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
+from django.template.defaultfilters import date as date_filter
 from expenses.models import Expense
 from parameterized import parameterized
-from periods.api.serializers import PeriodExpenseSerializer, PeriodSerializer
+from periods.api.serializers import (PeriodExpenseSerializer,
+                                     PeriodFinancialEvolutionSerializer,
+                                     PeriodMonthSerializer, PeriodSerializer)
 from periods.models import Period
 from rest_framework.test import APITestCase
 
@@ -75,8 +78,8 @@ class PeriodSerializerTest(PeriodSerializerTestMixin, APITestCase):
         serializer = PeriodSerializer(period)
         self.assertEqual({e['id'] for e in serializer.data['expenses']},
                          {str(expense.id) for expense in expenses})
-        self.assertEqual(str(serializer.data['user_balance']),
-                         str(self.user.income))
+        self.assertEqual(serializer.data['user_balance'],
+                         self.user.income)
         self.assertEqual(
             serializer.data['monthly_expense'], monthly_expense)
         self.assertEqual(str(serializer.data['month']), str(period.month))
@@ -91,7 +94,7 @@ class PeriodExpenseSerializerTest(PeriodSerializerTestMixin, APITestCase):
             user=self.user, month=period.month, quantity=10)
         monthly_expense = period.expenses.aggregate(
             total=Sum('value'))['total'] or 0.0
-        daily_average = monthly_expense / date.today().day
+        daily_average = float(monthly_expense / date.today().day)
         category_that_appears_most = self.make_categories(self.user, 1)[0]
         for expense in expenses:
             expense.categories.add(category_that_appears_most)
@@ -175,3 +178,42 @@ class PeriodExpenseSerializerTest(PeriodSerializerTestMixin, APITestCase):
             self.assertEqual(
                 serializer.data['daily_evolution'][i]['total_expense'],
                 daily_evolution_item['total_expense'])
+
+
+class PeriodMonthSerializerTest(PeriodSerializerTestMixin, APITestCase):
+
+    def test_period_month_serializer_fields_is_correct_value(self):
+        period, _ = Period.objects.get_or_create(user=self.user)
+        self.make_expenses(user=self.user, month=period.month, quantity=10)
+        monthly_expense = period.expenses.aggregate(
+            total=Sum('value'))['total'] or 0.0
+        expected_data = {
+            'user_balance': float(self.user.income),
+            'monthly_expense': monthly_expense
+        }
+        serializer = PeriodMonthSerializer(period)
+        self.assertEqual(serializer.data, expected_data)
+
+
+class PeriodFinancialEvolutionSerializerTest(PeriodSerializerTestMixin,
+                                             APITestCase):
+
+    @parameterized.expand([
+        (date(2025, 1, 1), ['Out', 'Nov', 'Dez', 'Jan', 'Fev', 'Mar', 'Abr']),
+        (date(2025, 7, 1), ['Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out']),
+        (date(2025, 12, 1), ['Set', 'Out', 'Nov', 'Dez', 'Jan', 'Fev', 'Mar']),
+    ])
+    def test_period_financial_evolution_serializer_abbreviation_is_correct(
+            self, month, expected_months):
+        current_period, _ = Period.objects.get_or_create(user=self.user,
+                                                         month=month)
+        for i in range(1, 13):
+            self.make_expenses(
+                user=self.user,
+                month=date(current_period.month.year, i, 1),
+                quantity=i)
+        serializer = PeriodFinancialEvolutionSerializer(current_period)
+        actual_evolution = serializer.data['financial_evolution']
+        actual_months = [item['month_abbreviation']
+                         for item in actual_evolution]
+        self.assertEqual(actual_months, expected_months)
