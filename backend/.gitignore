@@ -137,3 +137,10 @@ GitHub.sublime-settings
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
+
+#apache
+apache/ssl/*.crt
+apache/ssl/*.key
+apache/ssl/*.pem
+apache/ssl/*.p12
+apache/ssl/*.pfx
