@@ -31,11 +31,14 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    environment:
+      - SERVER_NAME=${SERVER_NAME:-localhost}
     volumes:
       - static_volume:/usr/local/apache2/htdocs/static
       - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
-      - ./apache/my-vhost.conf:/usr/local/apache2/conf.d/my-vhost.conf
       - ./apache/ssl:/usr/local/apache2/conf/ssl
+      - ./apache/start-apache.sh:/usr/local/bin/start-apache.sh
+    command: ["/usr/local/bin/start-apache.sh"]
     depends_on:
       - web
 
