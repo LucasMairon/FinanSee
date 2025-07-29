@@ -16,9 +16,7 @@ export const PageContainer = styled.div`
   background-color: ${colors.background};
   min-height: 100vh;
 
-  /* --- Adição para Responsividade --- */
   @media (max-width: 768px) {
-    /* Em telas pequenas, o menu vai para cima e o conteúdo para baixo */
     flex-direction: column;
   }
 `;
@@ -27,9 +25,7 @@ export const MainContent = styled.main`
   flex-grow: 1;
   padding: 40px;
 
-  /* --- Adição para Responsividade --- */
   @media (max-width: 768px) {
-    /* Reduz o espaçamento interno em telas menores */
     padding: 20px;
   }
 `;
@@ -39,14 +35,11 @@ export const Header = styled.header`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 40px;
-  flex-wrap: wrap; // Permite que os itens quebrem a linha se não couberem
+  flex-wrap: wrap;
   gap: 20px;
 
-  /* --- Adição para Responsividade --- */
   @media (max-width: 768px) {
-    /* Empilha o título e as ações verticalmente */
     flex-direction: column;
-    /* Alinha tudo à esquerda */
     align-items: flex-start;
     gap: 24px;
     margin-bottom: 30px;
@@ -61,9 +54,8 @@ export const Title = styled.h1`
   color: ${colors.textPrimary};
   margin: 0;
 
-  /* --- Adição para Responsividade --- */
   @media (max-width: 768px) {
-    font-size: 1.75rem; /* Título um pouco menor no mobile */
+    font-size: 1.75rem;
   }
 `;
 
@@ -78,12 +70,10 @@ export const HeaderActions = styled.div`
   align-items: center;
   gap: 16px;
 
-  /* --- Adição para Responsividade --- */
   @media (max-width: 768px) {
-    /* Faz a busca e o botão ocuparem toda a largura e se empilharem */
     flex-direction: column;
     width: 100%;
-    align-items: stretch; /* Faz os itens internos esticarem */
+    align-items: stretch;
   }
 `;
 
@@ -93,19 +83,19 @@ export const SearchInput = styled.input`
   border-radius: 8px;
   font-size: 0.9rem;
   min-width: 220px;
-  background-color: ${colors.primaryGreen};
-  color: #ffffff;
+  background-color: #c2f0d1;
+  color: #0a2917;
   &:focus {
     outline: none;
     border-color: ${colors.primaryGreen};
     box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.2);
   }
   &::placeholder {
-    color: #ffffff;
+    color: #0a2917;
   }
 
   @media (max-width: 768px) {
-    min-width: auto; /* Remove a largura mínima no mobile */
+    min-width: auto;
     width: 100%;
   }
 `;
@@ -120,13 +110,12 @@ export const NewCategoryButton = styled.button`
   font-size: 0.9rem;
   cursor: pointer;
   transition: background-color 0.2s;
-  white-space: nowrap; // Evita que o texto quebre
+  white-space: nowrap;
 
   &:hover {
     background-color: #218838;
   }
 
-  /* --- Adição para Responsividade --- */
   @media (max-width: 768px) {
     width: 100%;
   }
@@ -137,9 +126,7 @@ export const CategoriesGrid = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 24px;
 
-  /* --- Adição para Responsividade --- */
   @media (max-width: 768px) {
-    /* Força uma única coluna no mobile para melhor leitura */
     grid-template-columns: 1fr;
     gap: 16px;
   }
@@ -197,4 +184,19 @@ export const CardDescription = styled.p`
   color: ${colors.textSecondary};
   line-height: 1.5;
   margin: 0;
+`;
+
+export const ContainerEmpyty = styled.div`
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+`;
+
+export const TextEmpyty = styled.p`
+  font-size: 1rem;
+  color: ${colors.textSecondary};
+  text-align: center;
+  font-weight: 400;
 `;

@@ -16,7 +16,12 @@ import {
   CancelButton,
 } from "./styles";
 
-export const ExitApp = ({ children }) => {
+export const ExitApp = ({ children, onSubmit }) => {
+  const handleSubmit = () => {
+    if (onSubmit) {
+      onSubmit();
+    }
+  };
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
@@ -27,7 +32,7 @@ export const ExitApp = ({ children }) => {
 
           <Label>Você tem certeza que deseja sair?</Label>
 
-          <Form>
+          <Form onSubmit={handleSubmit}>
             <ButtonGroup>
               <Dialog.Close asChild>
                 <CancelButton type="button">Cancelar</CancelButton>

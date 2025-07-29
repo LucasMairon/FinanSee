@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 // Libs
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 // Components
 import InputForm from "../inputForm";
@@ -31,19 +32,24 @@ export default function LoginForm() {
   const { fetchLogin, user } = useAuth();
 
   const [email, setEmail] = useState("xapab61445@pacfut.com");
-  const [errorEmail, setErrorEmail] = useState(false);
-  const [password, setPassword] = useState("Teste123@");
-  const [errorPassword, setErrorPassword] = useState(false);
+  const [password, setPassword] = useState("Teste@123");
 
   const onPressLogin = () => {
+    if (!email && !password) {
+      toast.error("Por favor, preencha os campos de email e senha");
+      return;
+    }
+
     const validEmail = isValidEmail(email);
-    setErrorEmail(!validEmail);
-    setErrorPassword(!password);
+
+    if (!validEmail) {
+      toast.error("Email inválido");
+      return;
+    }
 
     if (validEmail && password) {
       fetchLogin(email, password);
     }
-    // router.push("/dashboard");
   };
 
   useEffect(() => {
@@ -64,7 +70,6 @@ export default function LoginForm() {
         placeholder="Ex:email@email.com"
         value={email || ""}
         onChange={(e) => setEmail(e.target.value)}
-        error={errorEmail}
       />
       <SpaceVertical />
       <InputFormPassword
@@ -72,7 +77,6 @@ export default function LoginForm() {
         placeholder="Sua senha aqui"
         value={password || ""}
         onChange={(e) => setPassword(e.target.value)}
-        error={errorPassword}
       />
 
       <ButtonLoginContainer>

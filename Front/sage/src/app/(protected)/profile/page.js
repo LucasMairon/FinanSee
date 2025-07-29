@@ -1,15 +1,21 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 
 // Libs
 import { FiLock } from "react-icons/fi";
 import { toast } from "react-hot-toast";
 
+// Context
+import { useAuth } from "@/hooks/context";
+
 // Components
 import NavBarMenu from "@/components/NavBarMenu";
-import { ChangePasswordModal } from "@/app/profile/ChangePasswordModal";
+import { ChangePasswordModal } from "@/app/(protected)/profile/ChangePasswordModal";
 import { EditProfileModal } from "./EditProfileModal";
-import { DeletAccount } from "@/app/profile/DeletAccount";
+import { DeletAccount } from "@/app/(protected)/profile/DeletAccount";
+
+// Validators
+import { formatDate, getInitials } from "@/validators";
 
 // Styles
 import {
@@ -32,17 +38,7 @@ import {
   UserName,
   DetailItem as DetailItemStyled,
 } from "./styles";
-
-// Dados do usuário (mock)
-const userData = {
-  name: "José Maria da Silva",
-  email: "josemaria@email.com",
-  phone: "(83) 94002-8922",
-  cpf: "585.000.168-99",
-  monthlyIncome: "R$ 4.000,00",
-  birthDate: "01/04/2001",
-  initials: "JM",
-};
+import { cpfMask, moneyMask, phoneMask } from "@/validators/mask";
 
 const DetailItem = ({ label, value }) => (
   <DetailItemStyled>
@@ -55,35 +51,37 @@ const DetailItem = ({ label, value }) => (
 );
 
 export default function Profile() {
-  const handleChangePassword = (data) => {
-    console.log("Dados para enviar para a API:", data);
+  const { userData, updateUser, updatePassword, getUser, deleteAccount } =
+    useAuth();
 
+  const handleChangePassword = (data) => {
     try {
-      toast.success("Senha alterada com sucesso!");
+      updatePassword(data?.currentPassword, data?.newPassword);
     } catch (error) {
       console.log("Erro ao alterar senha:", error);
-      toast.error("Não foi possível alterar a senha.");
     }
   };
 
   const handleProfileUpdate = async (data) => {
-    console.log("Dados para enviar para a API:", data);
-
     try {
-      toast.success("Perfil atualizado com sucesso!");
+      updateUser(
+        data?.name,
+        data?.cpf,
+        data?.email,
+        data?.date_of_birth,
+        data?.phone,
+        data?.money
+      );
     } catch (error) {
       console.log("Erro ao atualizar perfil:", error);
-      toast.error("Não foi possível atualizar o perfil.");
     }
   };
 
   const handleDeleteAccount = () => {
-    console.log("Conta deletada com sucesso!");
     try {
-      toast.success("Conta deletada com sucesso!");
+      deleteAccount();
     } catch (error) {
       console.log("Erro ao deletar conta:", error);
-      toast.error("Não foi possível deletar a conta.");
       return;
     }
   };
@@ -99,10 +97,10 @@ export default function Profile() {
 
         <ProfileHeader>
           <Avatar>
-            <Initials>{userData.initials}</Initials>
+            <Initials>{getInitials(userData?.name)}</Initials>
           </Avatar>
           <UserInfo>
-            <UserName>{userData.name}</UserName>
+            <UserName>{userData?.name}</UserName>
             <Greeting>Olá, Bom dia!</Greeting>
           </UserInfo>
           <Actions>
@@ -110,10 +108,13 @@ export default function Profile() {
               <Button>Alterar senha</Button>
             </ChangePasswordModal>
             <EditProfileModal
-              emailProp={userData.email}
-              phoneProp={userData.phone}
-              moneyProp={userData.monthlyIncome}
+              emailProp={userData?.email}
+              phoneProp={userData?.phone_number}
+              moneyProp={userData?.income}
               onSubmit={handleProfileUpdate}
+              dataOfBirthProp={userData?.date_of_birth}
+              nameProp={userData?.name}
+              cpfProp={userData?.cpf}
             >
               <Button variant="primary">Editar perfil</Button>
             </EditProfileModal>
@@ -124,12 +125,21 @@ export default function Profile() {
         </ProfileHeader>
 
         <ProfileDetails>
-          <DetailItem label="Nome" value={userData.name} />
-          <DetailItem label="E-mail" value={userData.email} />
-          <DetailItem label="Telefone" value={userData.phone} />
-          <DetailItem label="CPF" value={userData.cpf} />
-          <DetailItem label="Renda mensal" value={userData.monthlyIncome} />
-          <DetailItem label="Data de nascimento" value={userData.birthDate} />
+          <DetailItem label="Nome" value={userData?.name} />
+          <DetailItem label="E-mail" value={userData?.email} />
+          <DetailItem
+            label="Telefone"
+            value={phoneMask(userData?.phone_number)}
+          />
+          <DetailItem label="CPF" value={cpfMask(userData?.cpf)} />
+          <DetailItem
+            label="Renda mensal"
+            value={`R$ ${moneyMask(userData?.income)}`}
+          />
+          <DetailItem
+            label="Data de nascimento"
+            value={formatDate(userData?.date_of_birth)}
+          />
         </ProfileDetails>
       </MainContent>
     </Container>

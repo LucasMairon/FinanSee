@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 
 // Libs
 import * as Dialog from "@radix-ui/react-dialog";
@@ -16,9 +16,18 @@ import {
   CancelButton,
 } from "./styles";
 
-export const DeletCateroryModal = ({ children }) => {
+export const DeletCateroryModal = ({ children, onSubmmit, idProp }) => {
+  const [open, setOpen] = useState(false);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (onSubmmit) {
+      onSubmmit(idProp);
+      setOpen(false);
+    }
+  };
   return (
-    <Dialog.Root>
+    <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
       <Dialog.Portal>
         <Overlay />
@@ -29,11 +38,11 @@ export const DeletCateroryModal = ({ children }) => {
             Deseja mesmo realizar esta operação? Ela é irreversível!
           </Label>
 
-          <Form>
+          <Form onSubmit={handleSubmit}>
             <ButtonGroup>
-              <Dialog.Close asChild>
-                <CancelButton type="button">Cancelar</CancelButton>
-              </Dialog.Close>
+              <CancelButton type="button" onClick={() => setOpen(false)}>
+                Cancelar
+              </CancelButton>
               <ConfirmButton type="submit">Confirmar</ConfirmButton>
             </ButtonGroup>
           </Form>

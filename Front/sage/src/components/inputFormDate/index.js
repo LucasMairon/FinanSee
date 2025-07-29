@@ -6,20 +6,20 @@ import { dateMask } from "@/validators/mask";
 // Styles
 import { Container, StyledLabel, StyledInput } from "./styles";
 
-const InputFormDate = ({ label, placeholder, value, onChange, error }) => {
+const InputFormDate = ({ label, placeholder, value, onChange }) => {
   const handleChange = (e) => {
     const masked = dateMask(e.target.value);
     onChange({ target: { value: masked } });
   };
 
   return (
-    <Container>
-      <StyledLabel $errorLabelMessage={error}>{label}</StyledLabel>
+    <Container suppressHydrationWarning>
+      <StyledLabel suppressHydrationWarning>{label}</StyledLabel>
       <StyledInput
+        suppressHydrationWarning
         placeholder={placeholder}
         value={value}
         onChange={handleChange}
-        $errorLabelMessage={error}
         maxLength={10}
       />
     </Container>

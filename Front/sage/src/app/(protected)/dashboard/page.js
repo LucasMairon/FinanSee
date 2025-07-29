@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 
 // Libs
 import {
@@ -19,7 +19,7 @@ import NavBarMenu from "@/components/NavBarMenu";
 import { useAuth } from "@/hooks/context";
 
 // Validators
-import { formatCurrency } from "@/validators";
+import { formatCurrency, formatDate } from "@/validators";
 
 // Styles
 import {
@@ -35,41 +35,19 @@ import {
   TransactionTable,
 } from "./styles";
 
-const chartData = [
-  { name: "Jan", Receita: 4000, Despesa: 2400 },
-  { name: "Fev", Receita: 3000, Despesa: 3398 },
-  { name: "Mar", Receita: 2000, Despesa: 1800 },
-  { name: "Abr", Receita: 3780, Despesa: 2908 },
-  { name: "Mai", Receita: 4890, Despesa: 3800 },
-  { name: "Jun", Receita: 2390, Despesa: 3800 },
-  { name: "Jul", Receita: 3490, Despesa: 2300 },
-  { name: "Ago", Receita: 2490, Despesa: 2800 },
-  { name: "Set", Receita: 3490, Despesa: 1900 },
-  { name: "Out", Receita: 3490, Despesa: 2500 },
-  { name: "Nov", Receita: 2800, Despesa: 3100 },
-  { name: "Dez", Receita: 3200, Despesa: 1800 },
-];
-
-const transactionsData = [
-  {
-    name: "Freelancer",
-    date: "Dom, 20 Abr 2025",
-    value: 500.0,
-    type: "income",
-  },
-  { name: "Almoço", date: "Sáb, 19 Abr 2025", value: -17.8, type: "expense" },
-  {
-    name: "Gasolina",
-    date: "Sáb, 19 Abr 2025",
-    value: -80.09,
-    type: "expense",
-  },
-  { name: "Padaria", date: "Sáb, 19 Abr 2025", value: -10.55, type: "expense" },
-  { name: "Spotify", date: "Sáb, 19 Abr 2025", value: -19.0, type: "expense" },
-];
-
 export default function Dashboard() {
-  const { userData } = useAuth();
+  const {
+    userData,
+    outlayFormsCurrent,
+    getOutlayFormsCurrent,
+    outlayEvolution,
+    getOutlayEvolution,
+  } = useAuth();
+
+  useEffect(() => {
+    getOutlayFormsCurrent();
+    getOutlayEvolution();
+  }, []);
 
   const getFirstSecondNameSelector = (name) => {
     const nameSplit = name?.split(" ");
@@ -98,26 +76,39 @@ export default function Dashboard() {
           <Card>
             <div className="card-header">
               <span>RECEITA MENSAL</span>
-              <span className="percentage">+2.39%</span>
             </div>
-            <div className="value">R$ 4.401,60</div>
-            <div className="last-update">Última atualização: 05/04/2025</div>
+            <div className="value">
+              R${" "}
+              {outlayFormsCurrent?.user_balance?.toFixed(2).replace(".", ",")}
+            </div>
+            <div className="last-update">
+              Última atualização: {formatDate(outlayFormsCurrent?.month)}
+            </div>
           </Card>
           <Card>
             <div className="card-header">
               <span>SALDO ATUAL</span>
-              <span className="percentage">+1.39%</span>
             </div>
-            <div className="value">R$ 2.345,80</div>
-            <div className="last-update">Última atualização: 17hrs</div>
+            <div className="value">
+              R$ {outlayFormsCurrent?.balance?.toFixed(2).replace(".", ",")}
+            </div>
+            <div className="last-update">
+              Última atualização: {formatDate(outlayFormsCurrent?.month)}
+            </div>
           </Card>
           <Card>
             <div className="card-header">
               <span>DESPESA ATUAL</span>
-              <span className="percentage">+1.28%</span>
             </div>
-            <div className="value">R$ 2.055,80</div>
-            <div className="last-update">Última atualização: 17hrs</div>
+            <div className="value">
+              R${" "}
+              {outlayFormsCurrent?.monthly_expense
+                ?.toFixed(2)
+                .replace(".", ",")}
+            </div>
+            <div className="last-update">
+              Última atualização: {formatDate(outlayFormsCurrent?.month)}
+            </div>
           </Card>
         </SummaryContainer>
 
@@ -125,7 +116,7 @@ export default function Dashboard() {
           <div className="chart-header">
             <div className="title-section">
               <h3>Evolução Financeira</h3>
-              <p>Última atualização: 23/04/2025</p>
+              <p>Última atualização: {formatDate(outlayFormsCurrent?.month)}</p>
             </div>
             <div className="legend">
               <div className="legend-item">
@@ -140,11 +131,15 @@ export default function Dashboard() {
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart
-              data={chartData}
+              data={outlayEvolution?.financial_evolution}
               margin={{ top: 5, right: 20, left: -20, bottom: 5 }}
             >
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="name" tickLine={false} axisLine={false} />
+              <XAxis
+                dataKey="month_abbreviation"
+                tickLine={false}
+                axisLine={false}
+              />
               <YAxis
                 tickFormatter={(value) => `${value / 1000}K`}
                 tickLine={false}
@@ -158,8 +153,16 @@ export default function Dashboard() {
                   boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
                 }}
               />
-              <Bar dataKey="Receita" fill="#28a745" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="Despesa" fill="#dc3545" radius={[4, 4, 0, 0]} />
+              <Bar
+                dataKey={(entry) => entry.data.user_balance}
+                fill="#28a745"
+                radius={[4, 4, 0, 0]}
+              />
+              <Bar
+                dataKey={(entry) => entry.data.monthly_expense}
+                fill="#dc3545"
+                radius={[4, 4, 0, 0]}
+              />
             </BarChart>
           </ResponsiveContainer>
         </ChartContainer>
@@ -178,18 +181,18 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {transactionsData.map((trans, index) => (
+              {outlayFormsCurrent?.expenses?.map((trans, index) => (
                 <TransactionRow key={index}>
                   <td>{trans.name}</td>
-                  <td>{trans.date}</td>
+                  <td>{formatDate(trans.date)}</td>
                   <td
                     className={
                       trans.type === "income" ? "value-income" : "value-expense"
                     }
                   >
                     {trans.type === "income"
-                      ? `+${formatCurrency(trans.value)}`
-                      : formatCurrency(trans.value)}
+                      ? `+ R$${formatCurrency(trans.value)}`
+                      : `- R$${formatCurrency(trans.value)}`}
                   </td>
                   <td>
                     <StatusBadge type={trans.type}>

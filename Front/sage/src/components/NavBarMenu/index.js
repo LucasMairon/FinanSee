@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 // Libs
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 // Components
 import { ExitApp } from "./ExitApp";
@@ -17,7 +18,7 @@ import { getInitials } from "@/validators";
 import { NavItem, NavMenu, Sidebar, UserProfile } from "./styles";
 
 const NavBarMenu = ({ active }) => {
-  const { userData } = useAuth();
+  const { userData, logout } = useAuth();
 
   const ActiveMenu = (refActive) => {
     if (active === refActive) {
@@ -25,6 +26,10 @@ const NavBarMenu = ({ active }) => {
     } else {
       return "none";
     }
+  };
+
+  const handleSubmitExitApp = () => {
+    logout();
   };
   return (
     <Sidebar>
@@ -62,7 +67,7 @@ const NavBarMenu = ({ active }) => {
         <div className="userInfo">
           <strong>{userData?.name}</strong>
         </div>
-        <ExitApp>
+        <ExitApp onSubmit={handleSubmitExitApp}>
           <div className="logoutIcon">
             <Image src="/Exit.svg" alt="Logo" width={24} height={24} />{" "}
           </div>

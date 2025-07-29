@@ -8,14 +8,14 @@ export const Container = styled.div`
   background-color: transparent;
 `;
 
-export const StyledLabel = styled.label`
+export const StyledLabel = styled.a`
   position: absolute;
   top: -10px;
   left: 12px;
   background-color: ${backgroundWhite};
   padding: 0 6px;
   font-size: 12px;
-  color: ${(Props) => (Props.$errorLabelMessage ? "#FF0000" : "#4c4c4c")};
+  color: #4c4c4c;
   font-weight: 400;
   z-index: 1;
 `;
@@ -24,8 +24,7 @@ export const StyledInput = styled.input`
   width: 100%;
   padding: 14px 12px;
   font-size: 14px;
-  border: ${(Props) =>
-    Props.$errorLabelMessage ? "2px solid #FF0000" : "2px solid #4c4c4c"};
+  border: 2px solid #4c4c4c;
   background-color: transparent;
   color: #4c4c4c;
   font-weight: 400;

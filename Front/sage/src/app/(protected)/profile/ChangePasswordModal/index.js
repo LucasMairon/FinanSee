@@ -88,7 +88,7 @@ export const ChangePasswordModal = ({ children, onSubmit }) => {
                 placeholder="Digite sua senha atual"
                 type={visible ? "none" : "password"}
               />
-              <ButtonEye onClick={() => setVisible(!visible)}>
+              <ButtonEye type="button" onClick={() => setVisible(!visible)}>
                 {visible ? (
                   <Image src="/eye-on.svg" alt="Logo" width={20} height={20} />
                 ) : (
@@ -106,7 +106,7 @@ export const ChangePasswordModal = ({ children, onSubmit }) => {
                 placeholder="Digite sua nova senha"
                 type={visible2 ? "none" : "password"}
               />
-              <ButtonEye2 onClick={() => setVisible2(!visible2)}>
+              <ButtonEye2 type="button" onClick={() => setVisible2(!visible2)}>
                 {visible2 ? (
                   <Image src="/eye-on.svg" alt="Logo" width={20} height={20} />
                 ) : (
@@ -124,7 +124,7 @@ export const ChangePasswordModal = ({ children, onSubmit }) => {
                 placeholder="Confirme sua nova senha"
                 type={visible3 ? "none" : "password"}
               />
-              <ButtonEye3 onClick={() => setVisible3(!visible3)}>
+              <ButtonEye3 type="button" onClick={() => setVisible3(!visible3)}>
                 {visible3 ? (
                   <Image src="/eye-on.svg" alt="Logo" width={20} height={20} />
                 ) : (

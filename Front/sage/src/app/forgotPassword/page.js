@@ -3,9 +3,13 @@ import React, { useState } from "react";
 
 // Libs
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 // Components
 import InputForm from "../../components/inputForm";
+
+// Context
+import { useAuth } from "@/hooks/context";
 
 // Utils
 import { isValidEmail } from "@/validators";
@@ -24,16 +28,27 @@ import {
 
 export default function ForgotPassword() {
   const router = useRouter();
+  const { forgotPassword } = useAuth();
 
   const [email, setEmail] = useState("");
-  const [errorEmail, setErrorEmail] = useState(false);
 
   const onPressForgotPassword = () => {
+    if (!email) {
+      toast.error("Por favor, preencha o campo de email");
+      return;
+    }
+
     const validEmail = isValidEmail(email);
 
-    setErrorEmail(!validEmail);
+    if (!validEmail) {
+      toast.error("Email inválido");
+      return;
+    }
 
-    if (validEmail) console.log("Tudo certo no reset de senha.");
+    if (validEmail) {
+      forgotPassword(email);
+      setEmail("");
+    }
   };
 
   return (
@@ -56,7 +71,6 @@ export default function ForgotPassword() {
             placeholder="Ex:email@email.com"
             value={email || ""}
             onChange={(e) => setEmail(e.target.value)}
-            error={errorEmail}
           />
         </Form>
         <ResetPasswordButton onClick={() => onPressForgotPassword()}>
