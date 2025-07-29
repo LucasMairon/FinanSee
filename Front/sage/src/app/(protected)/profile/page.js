@@ -77,9 +77,9 @@ export default function Profile() {
     }
   };
 
-  const handleDeleteAccount = () => {
+  const handleDeleteAccount = (currentPassword) => {
     try {
-      deleteAccount();
+      deleteAccount(currentPassword);
     } catch (error) {
       console.log("Erro ao deletar conta:", error);
       return;

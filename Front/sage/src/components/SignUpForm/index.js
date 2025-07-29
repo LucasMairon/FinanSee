@@ -35,6 +35,7 @@ import {
   SignUpButton,
   SpaceVertical,
   SpaceVertical10,
+  SignUpButtonBack,
 } from "./styles";
 
 export default function SignUpForm({ stepFinal, setStepFinal }) {
@@ -199,6 +200,10 @@ export default function SignUpForm({ stepFinal, setStepFinal }) {
           <SignUpButton onClick={() => onPressFinishSignUp()}>
             Cadastrar
           </SignUpButton>
+
+          <SignUpButtonBack onClick={() => setStepFinal(false)}>
+            Voltar
+          </SignUpButtonBack>
         </Content>
       )}
     </FormWrapper>

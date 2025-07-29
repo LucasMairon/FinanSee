@@ -129,6 +129,7 @@ const Outlay = () => {
     outlayForms,
     getOutlayForms,
     editOutlay,
+    exportPdfOutlay,
   } = useAuth();
 
   const [outlayFilter, setOutlayFilter] = useState([]);
@@ -236,7 +237,7 @@ const Outlay = () => {
               >
                 <Button>+ Nova Despesa</Button>
               </NewOutlayModal>
-              <ButtonDownload>
+              <ButtonDownload type="button" onClick={() => exportPdfOutlay()}>
                 <ExportIcon />
               </ButtonDownload>
             </Actions>

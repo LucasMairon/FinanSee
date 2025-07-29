@@ -11,9 +11,11 @@ import { toast } from "react-hot-toast";
 import LoadingView from "@/components/loadingView";
 
 // Validators
-import { formatDate3 } from "@/validators";
+import { formatDate3, openPdfBlob } from "@/validators";
+import { format } from "date-fns";
 
 const AuthContext = createContext();
+
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
@@ -52,7 +54,8 @@ export const AuthProvider = ({ children }) => {
       toast.error("Sua sessão expirou. Logue novamente");
     } else {
       console.log("API Error:", error.response || error.message || error);
-      toast.error(defaultMessage);
+      const errorMessageApi = error?.response?.data?.detail;
+      toast.error(errorMessageApi || defaultMessage);
     }
   };
 
@@ -167,6 +170,25 @@ export const AuthProvider = ({ children }) => {
       .finally(() => setLoadingOutlays(false));
   }, []);
 
+  const exportPdfOutlay = useCallback(() => {
+    setLoadingOutlays(true);
+    const data = {
+      period_date: format(new Date(), "yyyy-MM-dd"),
+    };
+    api
+      .post("periods/export/", data, {
+        responseType: "blob",
+      })
+      .then((resp) => {
+        toast.success("Relatório exportado com sucesso!");
+        openPdfBlob(resp?.data);
+      })
+      .catch((error) =>
+        handleApiError(error, "Erro ao exportar o relatório. Tente novamente.")
+      )
+      .finally(() => setLoadingOutlays(false));
+  }, []);
+
   // -------- CATEGORIES --------
   const getCategories = useCallback(() => {
     setLoadingCategories(true);
@@ -258,16 +280,22 @@ export const AuthProvider = ({ children }) => {
     [getUser]
   );
 
-  const deleteAccount = useCallback(() => {
-    setLoadingUser(true);
-    api
-      .delete("auth/users/me/")
-      .then(logout)
-      .catch((error) =>
-        handleApiError(error, "Não foi possível deletar a conta.")
-      )
-      .finally(() => setLoadingUser(false));
-  }, [logout]);
+  const deleteAccount = useCallback(
+    (currentPassword) => {
+      console.log(currentPassword, "AQUI");
+      setLoadingUser(true);
+      api
+        .delete("auth/users/me/", {
+          data: { current_password: currentPassword },
+        })
+        .then(logout)
+        .catch((error) =>
+          handleApiError(error, "Não foi possível deletar a conta.")
+        )
+        .finally(() => setLoadingUser(false));
+    },
+    [logout]
+  );
 
   const updatePassword = useCallback((oldPassword, newPassword) => {
     setLoadingUser(true);
@@ -298,7 +326,9 @@ export const AuthProvider = ({ children }) => {
           localStorage.setItem("tokenReflesh", resp.data.refresh);
           getUser();
         })
-        .catch((error) => handleApiError(error, "Erro ao fazer login."))
+        .catch((error) =>
+          handleApiError(error, "Erro ao fazer login. Tente novamente!")
+        )
         .finally(() => setLoadingAuth(false));
     },
     [getUser]
@@ -316,12 +346,15 @@ export const AuthProvider = ({ children }) => {
           phone_number: phone?.replace(/\D/g, ""),
           income: income?.replace(/\./g, "").replace(",", "."),
           password,
+          re_password: password,
         })
         .then((resp) => {
           setUserCreate(resp.data);
           toast.success("Conta criada com sucesso!");
         })
-        .catch((error) => handleApiError(error, "Erro ao criar conta."))
+        .catch((error) =>
+          handleApiError(error, "Erro ao criar conta. Tente novamente!")
+        )
         .finally(() => setLoadingAuth(false));
     },
     []
@@ -376,6 +409,7 @@ export const AuthProvider = ({ children }) => {
         loadingOutlays,
         loadingCategories,
         loadingAuth,
+        exportPdfOutlay,
       }}
     >
       {isAnyLoading && <LoadingView />}

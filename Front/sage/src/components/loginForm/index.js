@@ -31,8 +31,11 @@ export default function LoginForm() {
 
   const { fetchLogin, user } = useAuth();
 
-  const [email, setEmail] = useState("xapab61445@pacfut.com");
-  const [password, setPassword] = useState("Teste@123");
+  // const [email, setEmail] = useState("xapab61445@pacfut.com");
+  // const [password, setPassword] = useState("Teste@123");
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const onPressLogin = () => {
     if (!email && !password) {

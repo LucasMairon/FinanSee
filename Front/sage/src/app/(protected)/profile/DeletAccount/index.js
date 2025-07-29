@@ -3,6 +3,11 @@ import React, { useState } from "react";
 
 // Libs
 import * as Dialog from "@radix-ui/react-dialog";
+import Image from "next/image";
+import { toast } from "react-hot-toast";
+
+// Context
+import { useAuth } from "@/hooks/context";
 
 // Styles
 import {
@@ -14,16 +19,28 @@ import {
   ButtonGroup,
   ConfirmButton,
   CancelButton,
+  Input,
+  ButtonEye,
 } from "./styles";
 
 export const DeletAccount = ({ children, onSubmit }) => {
+  const { deleteAccount } = useAuth();
+
   const [open, setOpen] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [visible, setVisible] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    if (!currentPassword) {
+      toast.error("Campo senha é obrigátorio.");
+
+      return;
+    }
+
     if (onSubmit) {
-      onSubmit();
+      onSubmit(currentPassword);
       setOpen(false);
     }
   };
@@ -41,6 +58,23 @@ export const DeletAccount = ({ children, onSubmit }) => {
           </Label>
 
           <Form onSubmit={handleSubmit}>
+            <div>
+              <Label htmlFor="currentPassword">Senha atual</Label>
+              <Input
+                id="currentPassword"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                placeholder="Digite sua senha atual"
+                type={visible ? "none" : "password"}
+              />
+              <ButtonEye type="button" onClick={() => setVisible(!visible)}>
+                {visible ? (
+                  <Image src="/eye-on.svg" alt="Logo" width={20} height={20} />
+                ) : (
+                  <Image src="/eye-off.svg" alt="Logo" width={20} height={20} />
+                )}
+              </ButtonEye>
+            </div>
             <ButtonGroup>
               <CancelButton type="button" onClick={() => setOpen(false)}>
                 Cancelar

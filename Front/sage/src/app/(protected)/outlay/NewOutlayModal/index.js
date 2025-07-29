@@ -135,8 +135,6 @@ export const NewOutlayModal = ({
     handleOpenChange(false);
   };
 
-  console.log(category, "AQUI");
-
   const handleSubmit = (event) => {
     event.preventDefault();
 

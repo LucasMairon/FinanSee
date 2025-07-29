@@ -1,11 +1,9 @@
-// styles.js
 "use client";
 
 import styled from "styled-components";
 
-// Cores baseadas na imagem
 const colors = {
-  primary: "#28a745", // Verde principal
+  primary: "#28a745",
   background: "#f8f9fa",
   white: "#ffffff",
   textPrimary: "#212529",
@@ -27,7 +25,6 @@ export const Container = styled.div`
   }
 `;
 
-// --- Conteúdo Principal ---
 export const MainContent = styled.main`
   flex-grow: 1;
   padding: 40px;
