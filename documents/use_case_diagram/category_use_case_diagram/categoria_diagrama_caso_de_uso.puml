@@ -11,13 +11,16 @@ skinparam ArrowColor black
 rectangle "Finansee" {
     (Realizar Login) as realizar_login
     (Gerenciar Categoria) as gerenciar_categoria
+    (Buscar Categorias) as buscar_categorias
 }
 
 :Usuario: as usuario 
 
 usuario -- gerenciar_categoria
+usuario -- buscar_categorias
 
 gerenciar_categoria ..> realizar_login: <<include>>
+buscar_categorias ..> realizar_login: <<include>>
 
 
 @enduml

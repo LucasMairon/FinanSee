@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/period/pdf.css' %}" />
+    <title>Relatório Mensal de Despesas</title>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <img src="{% static 'img/logo.svg' %}" alt="FinanSee" class="logo" />
+        <div class="report-info">
+          <h2>Relatório Mensal de Despesas</h2>
+          <p><strong>Nome:</strong>{{period.user.name}}</p>
+          <p>
+            <strong>Período:</strong>
+            {{period.month|date:'F'}} de {{period.month|date:'Y'}}
+          </p>
+        </div>
+      </header>
+      <main>
+        <section class="summary-section">
+          <div class="summary-card">
+            <h3>Despesa Total</h3>
+            <p class="value">R$ {{period_serializer_data.monthly_expense}}</p>
+          </div>
+          <div class="summary-card">
+            <h3>Saldo Total</h3>
+            <p class="value">R$ {{period_serializer_data.balance}}</p>
+          </div>
+          <div class="summary-card">
+            <h3>Receita Total</h3>
+            <p class="value">R$ {{period_serializer_data.user_balance}}</p>
+          </div>
+        </section>
+        <table class="expenses-table">
+          <thead>
+            <tr>
+              <th>Nome da Despesa</th>
+              <th>Categorias</th>
+              <th>Valor</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for expense in period.expenses.all %}
+            <tr>
+              <td>{{expense.name}}</td>
+              <td>{{expense.categories.all|join:", "}}</td>
+              <td class="valor">{{expense.value}}</td>
+              {% if expense.status == 'P' %}
+              <td>
+                <span class="status paga">{{expense.get_status_display}}</span>
+              </td>
+              {% else %}
+              <td>
+                <span class="status apagar">
+                  {{expense.get_status_display}}
+                  </span
+                >
+              </td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </main>
+      <footer class="footer">
+        <p>&copy; 2025 FinanSee. Todos os direitos reservados.</p>
+      </footer>
+    </div>
+  </body>
+</html>

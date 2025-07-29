@@ -15,10 +15,10 @@ rectangle "Finansee" {
     (Gerenciar Usuário) as gerenciar_usuario
     (Gerenciar Despesas) as gerenciar_despesas
     (Gerenciar Categoria) as gerenciar_categoria
-    (Notificar Despesas) as notificar_depesas
     (Visualizar Resumo das Despesas) as visualizar_resumo_despesas
     (Visualizar_gasto_mensal) as visualizar_gasto_mensal
     (Buscar Despesas) as buscar_despesas
+    (Buscar Categorias) as buscar_categorias
     (Exportar Resumo Mensal) as exportar_resumo_mensal
     (Redefinir Senha) as redefinir_senha
     (Gerenciar Periodo) as gerenciar_periodo
@@ -27,12 +27,6 @@ rectangle "Finansee" {
 
 ' Atores
 :Usuario: as usuario 
-:Sistema: as sistema
-
-' Casos de uso relacionados ao sistema
-sistema -- validar_informacoes
-sistema -- notificar_depesas
-sistema -- gerenciar_periodo
 
 ' Casos de uso relacionados ao usuario
 usuario -- realizar_login
@@ -57,7 +51,9 @@ visualizar_gasto_mensal ..> realizar_login <<include>>
 
 ' Casos de uso relacionados as categorias
 usuario -- gerenciar_categoria
+usuario -- buscar_categorias
 
 gerenciar_categoria ..> realizar_login: <<include>>
+buscar_categorias ..> realizar_login: <<include>>
 
 @enduml
