@@ -184,6 +184,11 @@ export const TransactionsContainer = styled(Card)`
     gap: 10px;
   }
 
+  .h3 {
+    color: ${colors?.textPrimary};
+    font-weight: 600;
+  }
+
   @media (max-width: 768px) {
     padding: 16px;
   }

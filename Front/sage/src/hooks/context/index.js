@@ -59,6 +59,23 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const handleApiError2 = (error, defaultMessage) => {
+    if (error?.response?.data?.code === "token_not_valid") {
+      toast.error("Sua sessão expirou. Logue novamente");
+    } else {
+      console.log("API Error:", error.response || error.message || error);
+      const errorMessageApi =
+        error?.response?.data?.name ||
+        error?.response?.data?.email ||
+        error?.response?.data?.cpf ||
+        error?.response?.data?.date_of_birth ||
+        error?.response?.data?.phone_number ||
+        error?.response?.data?.income ||
+        error?.response?.data?.password;
+      toast.error(errorMessageApi || defaultMessage);
+    }
+  };
+
   // -------- OUTLAYS --------
   const getOutlays = useCallback(() => {
     setLoadingOutlays(true);
@@ -353,7 +370,7 @@ export const AuthProvider = ({ children }) => {
           toast.success("Conta criada com sucesso!");
         })
         .catch((error) =>
-          handleApiError(error, "Erro ao criar conta. Tente novamente!")
+          handleApiError2(error, "Erro ao criar conta. Tente novamente!")
         )
         .finally(() => setLoadingAuth(false));
     },

@@ -169,7 +169,7 @@ export default function Dashboard() {
 
         <TransactionsContainer>
           <div className="transactions-header">
-            <h3>Transações Recentes</h3>
+            <h3 className="h3">Transações Recentes</h3>
           </div>
           <TransactionTable>
             <thead>
