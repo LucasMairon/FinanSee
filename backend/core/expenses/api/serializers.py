@@ -74,69 +74,6 @@ class ExpenseSerializer(serializers.ModelSerializer):
 @extend_schema_serializer(
     examples=[
         OpenApiExample(
-            'Update Expense',
-            value={
-                'name': 'Updated Grocery Shopping',
-                'value': '175.00',
-                'date': '2024-01-15',
-                'description': 'Updated weekly grocery shopping',
-                'status': 'AP'
-            },
-            description='Example of expense update'
-        )
-    ]
-)
-class ExpenseUpdateSerializer(serializers.ModelSerializer):
-    """
-    Serializer for updating existing expenses.
-
-    Automatically handles period reassignment when date changes.
-    """
-
-    class Meta:
-        model = Expense
-        fields = ('name', 'value', 'date', 'description', 'status',)
-        extra_kwargs = {
-            'name': {
-                'help_text': 'Updated name of the expense'
-            },
-            'value': {
-                'help_text': 'Updated amount of the expense'
-            },
-            'date': {
-                'help_text': 'Updated date of the expense'
-            },
-            'description': {
-                'help_text': 'Updated description of the expense',
-                'required': False
-            },
-            'status': {
-                'help_text': 'Updated payment status'
-            }
-        }
-
-    def update(self, instance, validated_data):
-        """
-        Updates an expense and handles period reassignment if date changes.
-
-        Args:
-            instance: Existing expense instance
-            validated_data: Validated update data
-
-        Returns:
-            Expense: Updated expense instance
-        """
-        date = validated_data.get('date')
-        if date and (instance.period.month.year != date.year or
-                     instance.period.month.month != date.month):
-            validated_data['period'] = Period.objects.get_or_create(
-                user=instance.user, month=date)[0]
-        return super().update(instance, validated_data)
-
-
-@extend_schema_serializer(
-    examples=[
-        OpenApiExample(
             'Create Expense',
             value={
                 'name': 'New Expense',
@@ -147,10 +84,23 @@ class ExpenseUpdateSerializer(serializers.ModelSerializer):
                 'status': 'AP'
             },
             description='Example of expense creation'
+        ),
+        OpenApiExample(
+            'Update Expense',
+            value={
+                'name': 'Updated Grocery Shopping',
+                'value': '175.00',
+                'categories': ['550e8400-e29b-41d4-a716-446655440001'],
+                'date': '2024-01-15',
+                'description': 'Updated weekly grocery shopping',
+                'status': 'AP'
+            },
+            description='Example of expense update'
         )
+
     ]
 )
-class ExpenseCreateSerializer(serializers.ModelSerializer):
+class ExpenseCreateUpdateSerializer(serializers.ModelSerializer):
     """
     Serializer for creating new expenses.
 
@@ -159,9 +109,13 @@ class ExpenseCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Expense
-        fields = ('name', 'value', 'categories',
+        fields = ('id', 'name', 'value', 'categories',
                   'date', 'description', 'status',)
         extra_kwargs = {
+            'id': {
+                'read_only': True,
+                'help_text': 'Unique expense ID (auto-generated)'
+            },
             'name': {
                 'help_text': 'Name of the new expense'
             },
@@ -205,64 +159,20 @@ class ExpenseCreateSerializer(serializers.ModelSerializer):
             user=user, month=validated_data['date'])[0]
         return super().create(validated_data)
 
-
-@extend_schema_serializer(
-    examples=[
-        OpenApiExample(
-            'Add Categories',
-            value={
-                'categories': ['550e8400-e29b-41d4-a716-446655440001']
-            },
-            description='Example of adding categories to an expense'
-        ),
-        OpenApiExample(
-            'Remove Categories',
-            value={
-                'categories': ['550e8400-e29b-41d4-a716-446655440002']
-            },
-            description='Example of removing categories from an expense'
-        )
-    ]
-)
-class ExpenseCategorySerializer(serializers.ModelSerializer):
-    """
-    Serializer for managing expense categories.
-
-    Supports adding and removing categories from existing expenses.
-    """
-
-    class Meta:
-        model = Expense
-        fields = ('categories',)
-        extra_kwargs = {
-            'categories': {
-                'help_text': 'List of category IDs to add or remove'
-            }
-        }
-
     def update(self, instance, validated_data):
         """
-        Adds or removes categories from an expense based on context.
+        Updates an expense and handles period reassignment if date changes.
 
         Args:
             instance: Existing expense instance
-            validated_data: Validated category data
+            validated_data: Validated update data
 
         Returns:
             Expense: Updated expense instance
-
-        Raises:
-            ValueError: If add_category and remove_category are both True/False
         """
-        add_category = self.context.get('add_category')
-        remove_category = self.context.get('remove_category')
-        if add_category is True and remove_category in (None, False):
-            instance.categories.set(validated_data['categories'])
-        elif remove_category is True and add_category in (None, False):
-            instance.categories.remove(*validated_data['categories'])
-        else:
-            raise ValueError(
-                "add_category and remove_category cannot"
-                "be both True, False or None at the same time."
-            )
-        return instance
+        date = validated_data.get('date')
+        if date and (instance.period.month.year != date.year or
+                     instance.period.month.month != date.month):
+            validated_data['period'] = Period.objects.get_or_create(
+                user=instance.user, month=date)[0]
+        return super().update(instance, validated_data)
