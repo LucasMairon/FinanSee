@@ -37,6 +37,31 @@ export const Content = styled(Dialog.Content)`
   }
 `;
 
+export const RowHeader = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+export const IconsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+`;
+
+export const IconButton = styled.button`
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+
+  &:hover {
+    color: #212529;
+  }
+`;
+
 export const Title = styled(Dialog.Title)`
   margin: 0;
   font-weight: 700;
@@ -79,6 +104,22 @@ export const Input = styled.input`
   }
 `;
 
+export const Select = styled.select`
+  width: 12rem;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 16px;
+  box-sizing: border-box;
+  background-color: transparent;
+  color: #000;
+  font-weight: 400;
+
+  @media (max-width: 768px) {
+    width: 9.5rem;
+  }
+`;
+
 export const ButtonGroup = styled.div`
   display: flex;
   justify-content: space-around;
@@ -117,8 +158,24 @@ export const CancelButton = styled(BaseButton)`
   }
 `;
 
+export const CancelButton2 = styled(BaseButton)`
+  background-color: #34b361;
+  color: white;
+  font-weight: 600;
+
+  &:hover {
+    background-color: #16a34a;
+  }
+`;
+
 export const Row = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 8px;
+  gap: 20px;
+`;
+
+export const Row2 = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
 `;

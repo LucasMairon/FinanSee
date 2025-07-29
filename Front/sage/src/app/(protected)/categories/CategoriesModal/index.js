@@ -25,6 +25,7 @@ export const CategoryModal = ({
   onSubmit,
   nameProp,
   descriptionProp,
+  idProp,
 }) => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
@@ -44,7 +45,7 @@ export const CategoryModal = ({
     }
 
     if (onSubmit) {
-      onSubmit({ name, description, type });
+      onSubmit({ name, description, type, id: idProp });
     }
 
     setOpen(false);

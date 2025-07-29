@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled, { css, createGlobalStyle } from "styled-components";
 
 const colors = {
   background: "#f9fafb",
@@ -12,27 +12,6 @@ const colors = {
   primary: "#34b361",
   primaryHover: "#059669",
   blueFocus: "#bfdbfe",
-};
-
-const categoryColors = {
-  Lazer: "#E0F2FE",
-  Outros: "#F3E8FF",
-  Alimentação: "#FEF3C7",
-  Transporte: "#E0E7FF",
-  Moradia: "#D1FAE5",
-  Saúde: "#FFE4E6",
-  Educação: "#FEE2E2",
-  default: "#F3F4F6",
-};
-const categoryTextColors = {
-  Lazer: "#0284C7",
-  Outros: "#9333EA",
-  Alimentação: "#D97706",
-  Transporte: "#4F46E5",
-  Moradia: "#059669",
-  Saúde: "#DB2777",
-  Educação: "#DC2626",
-  default: "#4B5563",
 };
 
 export const PageWrapper = styled.div`
@@ -177,11 +156,6 @@ export const CardFooter = styled.p`
   margin: 0;
 `;
 
-export const CardTrendUp = styled.span`
-  color: ${colors.primary};
-  font-size: 0.75rem;
-`;
-
 export const SectionContainer = styled.section`
   background-color: ${colors.white};
   padding: 1.5rem;
@@ -260,21 +234,6 @@ export const Select = styled.select`
 export const ChartWrapper = styled.div`
   width: 100%;
   height: 250px;
-`;
-
-export const Legend = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  color: ${colors.textMuted};
-`;
-
-export const LegendColorBox = styled.div`
-  width: 12px;
-  height: 12px;
-  background-color: #ff4f4f;
-  border-radius: 2px;
 `;
 
 export const TableWrapper = styled.div`
@@ -362,13 +321,13 @@ export const StatusBadge = styled.span`
   white-space: nowrap;
 
   ${({ status }) =>
-    status === "Pago" &&
+    status === "P" &&
     css`
       background-color: #d1fae5;
       color: #065f46;
     `}
   ${({ status }) =>
-    status === "A pagar" &&
+    status === "AP" &&
     css`
       background-color: #fee2e2;
       color: #991b1b;
@@ -380,8 +339,38 @@ export const CategoryTag = styled.span`
   border-radius: 6px;
   font-weight: 500;
   font-size: 0.8rem;
-  background-color: ${({ category }) =>
-    categoryColors[category] || categoryColors.default};
-  color: ${({ category }) =>
-    categoryTextColors[category] || categoryTextColors.default};
+  background-color: #f3f4f6;
+  color: #4b5563;
+`;
+
+// Estilo injetado globalmente para o tooltip do gráfico
+export const GlobalTooltipStyle = createGlobalStyle`
+  .custom-tooltip {
+    background-color: #FF4F4F;
+    padding: 10px 15px;
+    border-radius: 8px;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    text-align: left;
+    opacity: 0.9;
+  }
+
+  .custom-tooltip .label-date {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .custom-tooltip .label-value {
+    margin: 4px 0 0 0;
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+`;
+
+export const ActionIcon = styled.td`
+  padding: 1rem;
+  border-bottom: 1px solid ${colors.border};
+  vertical-align: middle;
+  cursor: pointer;
 `;

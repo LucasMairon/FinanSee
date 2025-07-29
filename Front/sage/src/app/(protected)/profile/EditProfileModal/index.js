@@ -6,8 +6,8 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { toast } from "react-hot-toast";
 
 // Validators
-import { phoneMask, moneyMask } from "../../../validators/mask";
-import { isValidEmail, isValidPhone } from "../../../validators";
+import { phoneMask, moneyMask } from "../../../../validators/mask";
+import { isValidEmail, isValidPhone } from "../../../../validators";
 
 // Styles
 import {
@@ -28,6 +28,9 @@ export const EditProfileModal = ({
   phoneProp,
   moneyProp,
   onSubmit,
+  dataOfBirthProp,
+  nameProp,
+  cpfProp,
 }) => {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -70,6 +73,9 @@ export const EditProfileModal = ({
         email,
         phone: phone.replace(/\D/g, ""),
         money: money.replace(/[R$\s.]/g, "").replace(",", "."),
+        date_of_birth: dataOfBirthProp,
+        name: nameProp,
+        cpf: cpfProp?.replace(/\.|-/g, ""),
       };
       onSubmit(submissionData);
       setOpen(false);
