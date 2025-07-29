@@ -20,8 +20,6 @@ class ExpenseViewSetTestCase(APITestCase):
     def setUp(self):
         self.expense_url = 'expense-list'
         self.expense_detail_url = 'expense-detail'
-        self.expense_action_add_category_url = 'expense-add-category'
-        self.expense_action_remove_category_url = 'expense-remove-category'
         self.user = User.objects.create_user(email='test@test.com',
                                              password='testpassword')
         self.another_user = User.objects.create_user(
@@ -189,6 +187,7 @@ class ExpenseViewSetTestCase(APITestCase):
             'value': Decimal('500.00'),
             'date': date(year=2023, month=1, day=1),
             'status': Expense.STATUS_CHOICES[1][0],
+            'categories': [c.id for c in self.make_categories(self.user, 1)],
         }
         response = self.client.put(
             reverse(self.expense_detail_url, kwargs={'pk': expense.id}),
@@ -204,6 +203,7 @@ class ExpenseViewSetTestCase(APITestCase):
             'value': Decimal('500.00'),
             'date': date(year=2023, month=1, day=1),
             'status': Expense.STATUS_CHOICES[1][0],
+            'categories': [c.id for c in self.make_categories(self.user, 1)],
         }
         response = self.client.put(
             reverse(self.expense_detail_url, kwargs={'pk': expense.id}),
@@ -214,6 +214,8 @@ class ExpenseViewSetTestCase(APITestCase):
         self.assertEqual(response.data['value'], str(updated_data['value']))
         self.assertEqual(response.data['date'], str(updated_data['date']))
         self.assertEqual(response.data['status'], updated_data['status'])
+        self.assertEqual(set(response.data['categories']),
+                         set(updated_data['categories']))
 
     def test_update_expense_with_invalid_data_is_status_code_400_bad_request(self):
         self.authenticate(self.user)
@@ -275,14 +277,22 @@ class ExpenseViewSetTestCase(APITestCase):
         ('value', Decimal('500.00')),
         ('date', date(year=2023, month=1, day=1)),
         ('status', Expense.STATUS_CHOICES[1][0]),
+        ('categories', 1),
+        ('categories', 2),
     ])
     def test_partial_update_expense_data_is_updated_correctly(self, field, value):
         self.authenticate(self.user)
         expense = self.make_expenses(self.user, 1)[0]
+        if field == 'categories':
+            value = [c.id for c in self.make_categories(self.user, value)]
         response = self.client.patch(
             reverse(self.expense_detail_url, kwargs={'pk': expense.id}),
             data={field: value},)
-        self.assertEqual((response.data[field]), str(value))
+        if field == 'categories':
+            self.assertEqual(set(response.data['categories']),
+                             set(value))
+        else:
+            self.assertEqual((response.data[field]), str(value))
 
     @parameterized.expand([
         ('name', '399835349579347'),
@@ -295,6 +305,10 @@ class ExpenseViewSetTestCase(APITestCase):
         ('date', '2022/01/01'),
         ('status', 'rjgoeigjoer'),
         ('status', ''),
+        ('categories', ''),
+        ('categories', '550e8400-e29b-41d4-a716-446655440001'),
+        ('categories', ['550e8400-e29b-41d4-a716-446655440001',
+                        '550e8400-e29b-41d4-a716-446655440002']),
     ])
     def test_partial_update_expense_with_invalid_data_is_status_code_400_bad_request(self, field, value):
         self.authenticate(self.user)
@@ -356,76 +370,3 @@ class ExpenseViewSetTestCase(APITestCase):
         response = self.client.delete(
             reverse(self.expense_detail_url, kwargs={'pk': expense.id}))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    def test_expense_add_category_is_status_code_200_ok(self):
-        self.authenticate(self.user)
-        expense = self.make_expenses(self.user, 1)[0]
-        expense_add_category_data = {
-            'categories': [c.id for c in self.make_categories(self.user, 1)]}
-        response = self.client.post(
-            reverse(self.expense_action_add_category_url,
-                    kwargs={'pk': expense.id}),
-            data=expense_add_category_data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_expense_add_category_with_invalid_data_is_status_code_400_bad_request(self):
-        self.authenticate(self.user)
-        expense = self.make_expenses(self.user, 1)[0]
-        expense_add_category_data = {
-            'categories': ['iivjwivsjpsvspvjpsdv']}
-        response = self.client.post(
-            reverse(self.expense_action_add_category_url,
-                    kwargs={'pk': expense.id}),
-            data=expense_add_category_data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_expense_add_category_is_correct_data(self):
-        self.authenticate(self.user)
-        expense = self.make_expenses(self.user, 1)[0]
-        categories_ids_for_add = {
-            str(c.id) for c in self.make_categories(self.user, 5)}
-        expense_add_category_data = {
-            'categories': categories_ids_for_add}
-        response = self.client.post(
-            reverse(self.expense_action_add_category_url,
-                    kwargs={'pk': expense.id}),
-            data=expense_add_category_data)
-        expense_category_ids = {c['id'] for c in response.data['categories']}
-        self.assertTrue(categories_ids_for_add.issubset(expense_category_ids))
-
-    def test_expense_remove_category_is_status_code_204_no_content(self):
-        self.authenticate(self.user)
-        expense = self.make_expenses(self.user, 1)[0]
-        expense_add_category_data = {
-            'categories': [expense.categories.all()[0].id]}
-        response = self.client.post(
-            reverse(self.expense_action_remove_category_url,
-                    kwargs={'pk': expense.id}),
-            data=expense_add_category_data)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
-    def test_expense_remove_category_with_invalid_data_is_status_code_400_bad_request(self):
-        self.authenticate(self.user)
-        expense = self.make_expenses(self.user, 1)[0]
-        expense_add_category_data = {
-            'categories': ['iivjwivsjpsvspvjpsdv']}
-        response = self.client.post(
-            reverse(self.expense_action_remove_category_url,
-                    kwargs={'pk': expense.id}),
-            data=expense_add_category_data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_expense_remove_category_is_successful(self):
-        self.authenticate(self.user)
-        expense = self.make_expenses(self.user, 1)[0]
-        id_category_to_remove = expense.categories.all()[0].id
-        expense_add_category_data = {
-            'categories': [id_category_to_remove]}
-        self.client.post(
-            reverse(self.expense_action_remove_category_url,
-                    kwargs={'pk': expense.id}),
-            data=expense_add_category_data)
-        self.assertTrue(Category.objects.filter(
-            id=id_category_to_remove).exists())
-        with self.assertRaises(Category.DoesNotExist):
-            expense.categories.get(id=id_category_to_remove)

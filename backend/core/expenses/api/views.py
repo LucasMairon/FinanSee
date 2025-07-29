@@ -3,16 +3,11 @@ from drf_spectacular.utils import (OpenApiParameter, extend_schema,
                                    extend_schema_view)
 from expenses.api.pagination import ExpensePagination
 from expenses.api.permissions import IsOwner
-from expenses.api.serializers import (ExpenseCategorySerializer,
-                                      ExpenseCreateSerializer,
-                                      ExpenseSerializer,
-                                      ExpenseUpdateSerializer)
+from expenses.api.serializers import (ExpenseCreateUpdateSerializer,
+                                      ExpenseSerializer)
 from expenses.models import Expense
-from rest_framework import status
-from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 
@@ -135,12 +130,8 @@ class ExpenseViewSet(ModelViewSet):
         Returns:
             Serializer: Appropriate serializer for the current action
         """
-        if self.action in ['create', ]:
-            return ExpenseCreateSerializer
-        if self.action in ['update', 'partial_update', ]:
-            return ExpenseUpdateSerializer
-        if self.action in ['add_category', 'remove_category', ]:
-            return ExpenseCategorySerializer
+        if self.action in ['create', 'update', 'partial_update', ]:
+            return ExpenseCreateUpdateSerializer
         return ExpenseSerializer
 
     def get_queryset(self):
@@ -163,54 +154,3 @@ class ExpenseViewSet(ModelViewSet):
         """
         serializer.context['user'] = self.request.user
         serializer.save()
-
-    @extend_schema(
-        summary="Add categories to expense",
-        description="Adds categories to an existing expense",
-        tags=['Expenses']
-    )
-    @action(detail=True, methods=['post'])
-    def add_category(self, request, pk=None):
-        """
-        Adds categories to an existing expense.
-
-        Args:
-            request: HTTP request object
-            pk: Primary key of the expense
-
-        Returns:
-            Response: Updated expense data
-        """
-        expense = self.get_object()
-        serializer = ExpenseCategorySerializer(
-            instance=expense, data=request.data,
-            context={'add_category': True})
-        serializer.is_valid(raise_exception=True)
-        expense = serializer.save()
-        serializer = ExpenseSerializer(instance=expense)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-    @extend_schema(
-        summary="Remove categories from expense",
-        description="Removes categories from an existing expense",
-        tags=['Expenses']
-    )
-    @action(detail=True, methods=['post'])
-    def remove_category(self, request, pk=None):
-        """
-        Removes categories from an existing expense.
-
-        Args:
-            request: HTTP request object
-            pk: Primary key of the expense
-
-        Returns:
-            Response: No content response
-        """
-        expense = self.get_object()
-        serializer = ExpenseCategorySerializer(
-            instance=expense, data=request.data,
-            context={'remove_category': True})
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(status=status.HTTP_204_NO_CONTENT)

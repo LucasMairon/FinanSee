@@ -3,10 +3,8 @@ from decimal import Decimal
 
 from categories.models import Category
 from django.contrib.auth import get_user_model
-from expenses.api.serializers import (ExpenseCategorySerializer,
-                                      ExpenseCreateSerializer,
-                                      ExpenseSerializer,
-                                      ExpenseUpdateSerializer)
+from expenses.api.serializers import (ExpenseCreateUpdateSerializer,
+                                      ExpenseSerializer)
 from expenses.models import Expense
 from parameterized import parameterized
 from rest_framework.serializers import ValidationError
@@ -52,13 +50,13 @@ class ExpenseSerializerTest(APITestCase):
     def test_expense_create_update_serializer_data_is_valid(self):
         self.expense_data['categories'] = [
             c.id for c in self.make_categories(self.user, 1)]
-        serializer = ExpenseCreateSerializer(data=self.expense_data)
+        serializer = ExpenseCreateUpdateSerializer(data=self.expense_data)
         self.assertTrue(serializer.is_valid())
 
     def test_expense_create_serializer_create_data_is_correct(self):
         self.expense_data['categories'] = [
             c.id for c in self.make_categories(self.user, 1)]
-        serializer = ExpenseCreateSerializer(
+        serializer = ExpenseCreateUpdateSerializer(
             data=self.expense_data, context=self.expense_serializer_context)
         serializer.is_valid(raise_exception=True)
         expense = serializer.save()
@@ -75,26 +73,28 @@ class ExpenseSerializerTest(APITestCase):
     def test_expense_create_serializer_create_expense_is_success(self):
         self.expense_data['categories'] = [
             c.id for c in self.make_categories(self.user, 1)]
-        serializer = ExpenseCreateSerializer(
+        serializer = ExpenseCreateUpdateSerializer(
             data=self.expense_data, context=self.expense_serializer_context)
         serializer.is_valid(raise_exception=True)
         expense = serializer.save()
         self.assertIsNotNone(expense)
 
     def test_expense_serializer_update_is_successful(self):
-        serializer = ExpenseCreateSerializer(
+        serializer = ExpenseCreateUpdateSerializer(
             data=self.expense_data, context=self.expense_serializer_context)
         serializer.is_valid(raise_exception=True)
         expense = serializer.save()
         self.assertIsNotNone(expense)
+        categories_for_update = self.make_categories(self.user, 2)
         updated_data = {
             'name': 'Expense Updated Name',
             'description': 'This is a test expense updated description.',
             'value': Decimal('500.00'),
             'date': date(year=2023, month=1, day=1),
             'status': Expense.STATUS_CHOICES[1][0],
+            'categories': [c.id for c in categories_for_update],
         }
-        serializer = ExpenseUpdateSerializer(
+        serializer = ExpenseCreateUpdateSerializer(
             instance=expense, data=updated_data)
         serializer.is_valid(raise_exception=True)
         updated_expense = serializer.save()
@@ -104,6 +104,8 @@ class ExpenseSerializerTest(APITestCase):
         self.assertEqual(updated_expense.value, updated_data['value'])
         self.assertEqual(updated_expense.date, updated_data['date'])
         self.assertEqual(updated_expense.status, updated_data['status'])
+        self.assertEqual(set(updated_expense.categories.all()),
+                         set(categories_for_update))
 
     @parameterized.expand([
         ('name', 'Expense Updated Name'),
@@ -111,20 +113,30 @@ class ExpenseSerializerTest(APITestCase):
         ('value', Decimal('500.00')),
         ('date', date(year=2023, month=1, day=1)),
         ('status', Expense.STATUS_CHOICES[1][0]),
+        ('categories', 1),
+        ('categories', 2),
     ])
-    def test_expense_serializer_partial_update_is_successful(self, field, value):
-        serializer = ExpenseCreateSerializer(
+    def test_expense_serializer_partial_update_is_successful(self, field,
+                                                             value):
+        if field == 'categories':
+            categories = self.make_categories(self.user, value)
+            value = [c.id for c in categories]
+        serializer = ExpenseCreateUpdateSerializer(
             data=self.expense_data, context=self.expense_serializer_context)
         serializer.is_valid(raise_exception=True)
         expense = serializer.save()
-        serializer = ExpenseUpdateSerializer(
+        serializer = ExpenseCreateUpdateSerializer(
             instance=expense, data={field: value}, partial=True)
         serializer.is_valid(raise_exception=True)
-        updated_user = serializer.save()
-        self.assertEqual(str(getattr(updated_user, field)), str(value))
+        updated_expense = serializer.save()
+        if field == 'categories':
+            self.assertEqual(set(updated_expense.categories.all()),
+                             set(categories))
+        else:
+            self.assertEqual(str(getattr(updated_expense, field)), str(value))
 
     def test_expense_serializer_delete_raises_does_not_exist_error(self):
-        serializer = ExpenseCreateSerializer(
+        serializer = ExpenseCreateUpdateSerializer(
             data=self.expense_data, context=self.expense_serializer_context)
         serializer.is_valid(raise_exception=True)
         expense = serializer.save()
@@ -136,7 +148,7 @@ class ExpenseSerializerTest(APITestCase):
     def test_expense_serializer_create_without_user_fails(self):
         self.expense_data['categories'] = [
             c.id for c in self.make_categories(self.user, 1)]
-        serializer = ExpenseCreateSerializer(data=self.expense_data)
+        serializer = ExpenseCreateUpdateSerializer(data=self.expense_data)
         with self.assertRaises(ValueError):
             serializer.is_valid(raise_exception=True)
             serializer.save()
@@ -156,58 +168,16 @@ class ExpenseSerializerTest(APITestCase):
         ('status', ''),
         ('status', 'rjgoeigjoer'),
         ('status', '654644654'),
+        ('categories', ''),
+        ('categories', '550e8400-e29b-41d4-a716-446655440001'),
+        ('categories', ['550e8400-e29b-41d4-a716-446655440001']),
     ])
     def test_expense_serializer_is_invalid_field_value(self, field, value):
-        serializer = ExpenseCreateSerializer(
+        serializer = ExpenseCreateUpdateSerializer(
             data=self.expense_data, context=self.expense_serializer_context)
         serializer.is_valid(raise_exception=True)
         expense = serializer.save()
-        serializer = ExpenseUpdateSerializer(
+        serializer = ExpenseCreateUpdateSerializer(
             instance=expense, data={field: value}, partial=True)
         with self.assertRaises(ValidationError):
             serializer.is_valid(raise_exception=True)
-
-    def test_expense_serializer_add_category_is_successful(self):
-        serializer = ExpenseCreateSerializer(
-            data=self.expense_data, context=self.expense_serializer_context)
-        serializer.is_valid(raise_exception=True)
-        expense = serializer.save()
-        categories_for_add = self.make_categories(self.user, 2)
-        serializer = ExpenseCategorySerializer(
-            instance=expense,
-            data={'categories': [c.id for c in categories_for_add]},
-            context={'add_category': True}
-        )
-        serializer.is_valid(raise_exception=True)
-        expense = serializer.save()
-        self.assertEqual(set(expense.categories.all()),
-                         set(categories_for_add))
-
-    def test_expense_serializer_remove_category_is_successful(self):
-        serializer = ExpenseCreateSerializer(
-            data=self.expense_data, context=self.expense_serializer_context)
-        serializer.is_valid(raise_exception=True)
-        expense = serializer.save()
-        serializer = ExpenseCategorySerializer(
-            instance=expense,
-            data={'categories': [
-                c.id for c in self.make_categories(self.user, 1)]},
-            context={'remove_category': True}
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        self.assertEqual(list(expense.categories.all()), [])
-
-    def test_expense_category_serializer_add_category_and_remove_category_is_none_raises_value_error(self):
-        serializer = ExpenseCreateSerializer(
-            data=self.expense_data, context=self.expense_serializer_context)
-        serializer.is_valid(raise_exception=True)
-        expense = serializer.save()
-        categories_for_add = self.make_categories(self.user, 2)
-        with self.assertRaises(ValueError):
-            serializer = ExpenseCategorySerializer(
-                instance=expense,
-                data={'categories': [c.id for c in categories_for_add]},
-            )
-            serializer.is_valid(raise_exception=True)
-            expense = serializer.save()
