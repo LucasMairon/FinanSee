@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 // Libs
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 // Components
 import { ExitApp } from "./ExitApp";
@@ -26,6 +25,19 @@ const NavBarMenu = ({ active }) => {
     } else {
       return "none";
     }
+  };
+
+  const getFirstSecondNameSelector = (name) => {
+    const nameSplit = name?.split(" ");
+    if (nameSplit) {
+      if (nameSplit?.length > 1) {
+        return `${nameSplit[0]}`;
+      }
+
+      return nameSplit[0];
+    }
+
+    return "";
   };
 
   const handleSubmitExitApp = () => {
@@ -65,7 +77,7 @@ const NavBarMenu = ({ active }) => {
       <UserProfile>
         <div className="avatar">{getInitials(userData?.name)}</div>
         <div className="userInfo">
-          <strong>{userData?.name}</strong>
+          <strong>{getFirstSecondNameSelector(userData?.name)}</strong>
         </div>
         <ExitApp onSubmit={handleSubmitExitApp}>
           <div className="logoutIcon">

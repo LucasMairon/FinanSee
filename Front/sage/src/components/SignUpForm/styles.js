@@ -49,6 +49,19 @@ export const SignUpButton = styled.button`
   margin-top: 15px;
 `;
 
+export const SignUpButtonBack = styled.button`
+  background-color: white;
+  color: #24b36b;
+  padding: 0.8rem;
+  border: 1px solid #24b36b;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 15px;
+`;
+
 export const RowInput = styled.div`
   display: flex;
   flex-direction: row;

@@ -1,8 +1,6 @@
-// components/CategoryModal/styles.js
 import styled, { keyframes } from "styled-components";
 import * as Dialog from "@radix-ui/react-dialog";
 
-// Animações
 const overlayShow = keyframes`
   from { opacity: 0; }
   to { opacity: 1; }
@@ -13,7 +11,6 @@ const contentShow = keyframes`
   to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 `;
 
-// Componentes Estilizados
 export const Overlay = styled(Dialog.Overlay)`
   background-color: rgba(0, 0, 0, 0.6);
   position: fixed;

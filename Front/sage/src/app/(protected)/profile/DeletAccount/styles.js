@@ -1,8 +1,8 @@
-// components/CategoryModal/styles.js
+"use_client";
+
 import styled, { keyframes } from "styled-components";
 import * as Dialog from "@radix-ui/react-dialog";
 
-// Animações
 const overlayShow = keyframes`
   from { opacity: 0; }
   to { opacity: 1; }
@@ -13,7 +13,6 @@ const contentShow = keyframes`
   to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 `;
 
-// Componentes Estilizados
 export const Overlay = styled(Dialog.Overlay)`
   background-color: rgba(0, 0, 0, 0.6);
   position: fixed;
@@ -62,6 +61,42 @@ export const Label = styled.label`
   margin-bottom: 4px;
   display: block;
   font-weight: 400;
+`;
+
+export const Input = styled.input`
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 16px;
+  box-sizing: border-box;
+  background-color: transparent;
+  color: #000;
+  font-weight: 400;
+
+  &:focus {
+    outline: none;
+    border-color: #22c55e;
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.3);
+  }
+`;
+
+export const ButtonEye = styled.button`
+  position: absolute;
+  right: 40px;
+  top: 52%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
+
+  @media (max-width: 768px) {
+    top: 55%;
+  }
 `;
 
 export const ButtonGroup = styled.div`

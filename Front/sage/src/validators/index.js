@@ -202,3 +202,16 @@ export const getInitials = (fullName) => {
 export const formatCurrency = (value) => {
   return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 };
+
+export const openPdfBlob = (pdfBlob, fileName = "document.pdf") => {
+  try {
+    const fileURL = URL.createObjectURL(pdfBlob);
+
+    const newWindow = window.open(fileURL, "_blank");
+    if (newWindow) {
+      newWindow.document.title = fileName;
+    }
+  } catch (error) {
+    console.error("Erro ao abrir o Blob do PDF:", error);
+  }
+};

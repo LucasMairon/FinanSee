@@ -343,7 +343,6 @@ export const CategoryTag = styled.span`
   color: #4b5563;
 `;
 
-// Estilo injetado globalmente para o tooltip do gráfico
 export const GlobalTooltipStyle = createGlobalStyle`
   .custom-tooltip {
     background-color: #FF4F4F;

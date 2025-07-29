@@ -4,7 +4,7 @@ import { LoadingOverlay, Spinner } from "./styles";
 
 const LoadingView = () => {
   return (
-    <LoadingOverlay>
+    <LoadingOverlay suppressHydrationWarning>
       <Spinner suppressHydrationWarning />
     </LoadingOverlay>
   );

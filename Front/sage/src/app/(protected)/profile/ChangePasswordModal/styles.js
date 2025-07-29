@@ -1,4 +1,3 @@
-// components/CategoryModal/styles.js
 import styled, { keyframes } from "styled-components";
 import * as Dialog from "@radix-ui/react-dialog";
 
@@ -75,7 +74,7 @@ export const Input = styled.input`
 
   &:focus {
     outline: none;
-    border-color: #22c55e; /* Verde do seu app */
+    border-color: #22c55e;
     box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.3);
   }
 `;

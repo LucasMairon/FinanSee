@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://129.148.53.246:8000/api/",
+  baseURL: "https://api-finansee.ddns.net/api/",
   headers: {
     "Content-Type": "application/json",
   },
